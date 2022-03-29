@@ -220,6 +220,23 @@ Format specifiers: %
 %n	Prints nothing
 %%	Prints % character
 
+print 5 digits of int:
+printf("text %5d\n"); // Pads with spaces
+
+to pad with zeroes or other character
+printf("text %05d");
+
+printing floats with precision:
+printf("foo: %.2\n"); // Shows 2 decimal places
+
+Scanning from keyboard:
+int a;
+float b;
+scanf("%d,%f", &a, &b); // Scanf needs & for variables
+// & gives memory address to variables passed to scanf
+
+
+
 
 
 Loops:
