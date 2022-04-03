@@ -23,15 +23,16 @@ int main()
     }
 
     // Print whitespace to set starting day of week
-    for (int i = 0; i < start -1; i++){
+    for (int i=0; i<start-1; i++){
         printf("\t");
     }
 
     // Print each day of the month
-    for (int i = 0; i < days; i++){
-        printf("%d", (i+1));
-        if ((i+start) % 7 == 0){
-            // If space is divisible by 7, add newline
+    for (int i=1; i<days+1; i++){
+        printf("%d", (i));
+        // If current space is multiple of 7 or number is lasy day of month
+        if (((i+start-1) % 7 == 0) | (i == (days))){
+            // Print newline
             printf("\n");
         }
         else {
@@ -39,8 +40,6 @@ int main()
             printf("\t");
         }
     }
-    // Add extra newline after calendar is printed
-    printf("\n");
     
     return 0;
 }
