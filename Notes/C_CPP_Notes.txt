@@ -571,7 +571,7 @@ sizeof	Determine size in bytes on this implementation
 ==,!=	Relational is equal to or is not
 &	Bitwise AND
 ^	Bitwise exclusive OR
-|	Bitwise inclusive OR
+|	Bitwise inclusive OR (ORs the numbers in binary, returns result)
 &&	Logical AND
 ||	Logical OR
 ?:	Ternary conditional
