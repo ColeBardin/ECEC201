@@ -236,6 +236,7 @@ scanf("%d,%f", &a, &b); // Scanf needs & for variables
 // & gives memory address to variables passed to scanf
 
 
+
 Pointers:
 variables that store addresses of other variables
 multi byte data type
