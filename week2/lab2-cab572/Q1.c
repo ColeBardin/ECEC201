@@ -15,8 +15,8 @@ int main(){
 /* change back to main after check */
 int foo(int i)
 {
-  /* Be sure to test your program for all area codes in the table */
-  int area_code = i;
+    /* Be sure to test your program for all area codes in the table */
+    int area_code = i;
 
     /* Print the current area code with a tab
     Delete after validation */
@@ -48,9 +48,9 @@ int foo(int i)
         case 912:
             printf("Savannah\n");
             break;
-        /* If no matches, print default error message */
+        /* If no matches, print default error */
         default:
         printf("Area code not found\n");
     }
-  return 0;
+    return 0;
 }
