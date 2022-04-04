@@ -6,30 +6,40 @@
 
 int main()
 {
-    int days, start;
+    int days, start, i;
 
+    /* Get number of days of month from user */
     printf("Enter number of days in month: ");
+    /* Handle scanf error */
     if (scanf("%d", &days) != 1){
         return -1;
     }
+
+    /* Get starting day of week from user */
     printf("Enter starting day of the week (1=Sun, 7=Sat): ");
+    /* Handle scanf error */
     if (scanf("%d", &start) != 1){
         return -1;
     }
 
-    for (int i = 0; i < days + start - 1; i++){
-        if (i < start){
+    /* Print whitespace to set starting day of week */
+    for (i=0; i<start-1; i++){
+        printf("\t");
+    }
+
+    /* Print each day of the month */
+    for (i=1; i<days+1; i++){
+        printf("%d", (i));
+        /* If current space is multiple of 7 or number is lasy day of month */
+        if (((i+start-1) % 7 == 0) | (i == (days))){
+            /* Print newline */
+            printf("\n");
+        }
+        else {
+            /* Else, print tab */
             printf("\t");
         }
-        else{
-            printf("%d");
-            if ( (i-1) % 7 == 0){
-                printf("\n");
-            }
-            else{
-                printf("\t");
-            }
-        }
     }
-  return 0;
+    
+    return 0;
 }
