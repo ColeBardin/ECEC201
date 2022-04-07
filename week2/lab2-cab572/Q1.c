@@ -1,26 +1,26 @@
 #include <stdio.h>
 /* quick funcion to test switch statement over all area codes in table work plus 666 (not in table) */
-int foo(int i);
+int test_area_code(int i);
 
 int main(){
     int numbers[] = {229,404,470,678,770,478,706,762,912,666};
 
     int i;
     for (i=0; i<10; i++){
-        foo(numbers[i]);
+        test_area_code(numbers[i]);
     }
     return 0;
 }
 
 /* change back to main after check */
-int foo(int i)
+int test_area_code(int i)
 {
     /* Be sure to test your program for all area codes in the table */
     int area_code = i;
 
     /* Print the current area code with a tab
     Delete after validation */
-    printf("%d\t", area_code);
+    printf("%d:\t", area_code);
 
     /* switch statement on area_code */
     switch(area_code){
