@@ -1,2 +1,5 @@
 .DS_Store
 .ccls-cache/*
+.replit
+replit.nix
+.breakpoints
