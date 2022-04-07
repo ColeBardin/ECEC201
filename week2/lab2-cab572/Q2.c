@@ -22,8 +22,7 @@ int main()
         /* check primeness of index */
         if (is_prime(index)){
             /* increment count and print the number */
-            count++;
-            printf("%d: %d\n",count, index);
+            printf("%d: %d\n",++count, index);
         }
     }
     return 0;
