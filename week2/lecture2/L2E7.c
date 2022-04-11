@@ -1,10 +1,11 @@
 #include <stdio.h>
-int main()
-{
-  int i=10;
-  while(i>0)
-    {
-      printf("%d\n",i);
-      i=i-1;// or i--;
-    }
-}
+        int main()
+        {
+                int i;
+                for(i=0;i<10;i++)
+                        {
+                                printf("%i ",i);
+                        }
+                printf("\n");
+                return(0);
+        }

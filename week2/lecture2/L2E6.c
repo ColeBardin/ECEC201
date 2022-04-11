@@ -1,17 +1,13 @@
 #include <stdio.h>
-void safety_check()
-{
-  printf("Safety Check!\n");
-  }
-  void fire_boosters()  
-  {
-    printf("Boosters Fired");
-  }
-int main()
-{
-  int launch_state=0;
-  if(launch_state)
-    safety_check;
-  fire_boosters();
-  return(0);
-}
+        int main()
+        {
+                int foo=1000;
+                while(foo!=1)
+                {
+                        if(foo%2)
+                                foo+=1;
+                        foo=foo/2;
+                        printf("%i ",foo);
+                }
+                printf("\n");
+        }

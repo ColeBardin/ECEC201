@@ -1,10 +1,13 @@
 #include <stdio.h>
 int main()
 {
-  int i;
-  for(i=0;i<10;i++)
-    {
-      printf("%i ",i);
-    }
-  printf("\n");
+        int n;
+        int foo;
+        for(foo=100,n=0;n<5;n++,foo/=2)
+        {
+                if(foo<25)
+                        break;
+                printf("%i: %i\n",n,foo);
+        }
+        return(0);
 }

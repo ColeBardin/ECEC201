@@ -1,16 +1,19 @@
-//Modification of example on slide 56 of Lecture 2
 #include <stdio.h>
+
+
+void safety_check()
+{
+        printf("Safety_Check!\n");
+}
+void fire_boosters()
+{
+        printf("Boosters Fired!\n");
+}
 int main()
 {
-  if(6>7)
-    printf("\nFALSE!");
-  if(6<7)
-    printf("\nTRUE");
-      if(6<=7)
-        printf("\nALSO TRUE");
-  if((6>7)||(6==7))
-    printf("\nALSO FALSE");
-  if (!(6>7))
-    printf("\nALSO TRUE");
-  return(0);
+        int launch_state=0;
+        if(launch_state)
+                safety_check();
+        fire_boosters();
+        return(0);
 }

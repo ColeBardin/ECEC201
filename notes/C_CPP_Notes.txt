@@ -2,10 +2,10 @@ C/C++ Notes
 
 Data types:
 int - integer - 2 or 4 bytes
-float - floating piint - 4 bytes
+float - floating point - 4 bytes
 double - double floating point - 8 bytes
 char - character - 1 byte
-wchar_t - wide character -2 bytes
+wchar_t - wide character - 2 bytes
 bool - boolean - 1 byte
 void - empty - 0 bytes
 
@@ -232,7 +232,7 @@ printf("foo: %.2\n"); // Shows 2 decimal places
 Scanning from keyboard:
 int a;
 float b;
-scanf("%d,%f", &a, &b); // Scanf needs & for variables
+scanf("%d,%f", &a, &b); // Scanf needs '&' for variables. Only takes address
 // & gives memory address to variables passed to scanf
 
 

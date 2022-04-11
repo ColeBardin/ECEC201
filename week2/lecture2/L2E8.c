@@ -1,13 +1,9 @@
 #include <stdio.h>
 int main()
 {
-  int foo=1000;
-  while(foo!=1)
-    {
-      if(foo%2)
-        foo+=1;
-        foo=foo/2;
-      printf("%i ",foo);
-      }
-  printf("\n");
+        int n;
+        int foo;
+        for(foo=100,n=0;n<5;n++,foo/=2)
+            printf("%i  %i\n",n,foo);
+        return(0);
 }
