@@ -1,4 +1,7 @@
+# Mac Native file
 .DS_Store
+
+# Replit files
 .ccls-cache/*
 .replit
 replit.nix
