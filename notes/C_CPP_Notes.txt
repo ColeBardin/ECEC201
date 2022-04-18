@@ -244,14 +244,16 @@ scanf("%d,%f", &a, &b); // Scanf needs '&' for variables. Only takes address
 
 
 
+
+
 Pointers:
 variables that store addresses of other variables
 multi byte data type
 holds 64 bit address, 8 bytes
 
 Special operators:
-& //address of operator (what is the memory address of this variable)
-* //dereference operator (what is in memory at the address stored at this pointer)
+& //address of operator (what is the MEMORY ADDRESS of this variable)
+* //dereference operator (what is IN memory at the address stored at this pointer)
 
 char foo;
 char *foo_ptr; //var that stores add of vars of type char
@@ -263,6 +265,9 @@ foo_ptr (%p): 0x7ffe1749af07 // hex address of foo
 &foo_ptr (%p): 0x7ffe1749af08 // starting address of foo_ptr
 *foo_ptr (%d): 5
 */
+
+
+
 
 
 
