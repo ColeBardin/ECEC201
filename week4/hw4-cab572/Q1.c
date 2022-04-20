@@ -7,7 +7,9 @@
 
 void swap (int *a, int *b)
 {
-  /* Your code goes here */
+	*a += *b; /* a=x+y, b=y */
+	*b = *a - *b; /* a=x+y, b=x+y-y, b=x */
+	*a -= *b; /* a=x+y-x, a=y, b=x, swapped */
 }
 
 
@@ -15,7 +17,6 @@ int main ()
 {
   int x = 27;
   int y = 99;
-  
   printf("Before swap:\n");
   printf("  x: %d\n", x);
   printf("  y: %d\n", y);
