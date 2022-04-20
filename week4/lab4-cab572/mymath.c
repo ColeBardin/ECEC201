@@ -1,5 +1,4 @@
 void compute_fibs (unsigned long int *fibs, unsigned int *N){
-
 	/* create current_fib, next_fib vars as unsigned long ints */
 	unsigned long int current_fib = 0;
 	unsigned long int next_fib = 1;
@@ -17,3 +16,4 @@ void compute_fibs (unsigned long int *fibs, unsigned int *N){
 		current_fib = next_fib - current_fib;
 	}
 }
+
