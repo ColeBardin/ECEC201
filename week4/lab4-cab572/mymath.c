@@ -12,7 +12,7 @@ void compute_fibs (unsigned long int *fibs, unsigned int *N){
 		/* Store current fib in current index of fibs array */
 		fibs[index] = current_fib;
 		
-		if ( (ULONG_MAX - current_fib) + (ULONG_MAX - next_fib) > ULONG_MAX){
+		if ( next_fib < current_fib ){
 			*N = index + 1;
 			return;
 		}	
