@@ -1,5 +1,3 @@
-#include <limits.h>
-
 void compute_fibs (unsigned long int *fibs, unsigned int *N){
 	/* create current_fib, next_fib vars as unsigned long ints */
 	unsigned long int current_fib = 0;
