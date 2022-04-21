@@ -15,7 +15,7 @@ void compute_fibs (unsigned long int *fibs, unsigned int *N){
 			/* Set N to be current number of fibs printed correctly and return*/
 			*N = index + 1;
 			return;
-		}	
+		}
 
 		/* Set next fib to itself plus next */
 		next_fib += current_fib; 
