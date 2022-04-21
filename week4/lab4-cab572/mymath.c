@@ -10,7 +10,9 @@ void compute_fibs (unsigned long int *fibs, unsigned int *N){
 		/* Store current fib in current index of fibs array */
 		fibs[index] = current_fib;
 		
-		if ( next_fib < current_fib ){
+		/* If the next fib is less than the current one, next fib has overflown */
+		if ( current_fib > next_fib ) {
+			/* Set N to be current number of fibs printed correctly and return*/
 			*N = index + 1;
 			return;
 		}	
