@@ -8,7 +8,7 @@
 void zero_array (int *a, int n)
 {
 	/* Only modify this function */
-	int *q; /* Make pointer variable */
+	int *q; /* Make int pointer variable */
 	/* Make q point to first element of a
 	Decrease n each time, repeat while n>0 => repeat n times, n goes from n to 0
 	After each iteration, point q at nth element (Element 0 + n)
