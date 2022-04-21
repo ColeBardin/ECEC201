@@ -16,7 +16,7 @@ void compute_fibs (unsigned long int *fibs, unsigned int *N){
 		/* If next value will overflow max value for unsigned long */
 		if ( fibs[index-1] > ULONG_MAX - fibs[index-2] ) {		
 			/* Set N to be current number of fibs printed correctly and return */
-			*N = index + 1;
+			*N = index;
 			return;
 		}
 		
