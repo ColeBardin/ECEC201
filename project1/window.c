@@ -42,6 +42,7 @@ void window_update_graphics (char *house, const int *state, int x, int y)
 				house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = ' ';
 			}	
 		/*
+			If-statement equivalent ternary operator statement for fun :)
 			house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = state[x+3*y]?'#':' ';
 		*/
 		}
@@ -81,6 +82,7 @@ void window_toggle_state (int *state, int x, int y)
 		state[x + 3*y] = 1;
 	}
 	/*
+	If-statement equivalent ternary operator statement for fun :)
 	state[x+3*y] = state[x+3*y]?0:1;
 	*/
 }
