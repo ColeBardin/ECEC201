@@ -32,19 +32,15 @@ void window_update_graphics (char *house, const int *state, int x, int y)
 	for (x_i = 0; x_i < WINDOW_WIDTH; x_i++){
 		/* Iterate for each window height character */
 		for (y_i = 0; y_i < WINDOW_HEIGHT; y_i++){
-			/* If window state is ON (1) */
+			/* Ternary Operator to set the window char to be '#' or ' ' */ 
+			house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = state[x+3*y]?'#':' ';
+			/*	
 			if (state[x + 3*y] == 1) {
-				/* Set the window index relevant characters to be '#' char */
 				house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = '#';
-			/* If winodw state is OFF (0) */
 			}else{
-				/* Set the window index relevant characters to be ' ' char */
 				house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = ' ';
 			}	
-		/*
-			If-statement equivalent ternary operator statement for fun :)
-			house[(11 + x*(WINDOW_WIDTH + 7) + x_i) + (8 + y_i + (WINDOW_HEIGHT+3)*y)*HOUSE_WIDTH] = state[x+3*y]?'#':' ';
-		*/
+			*/
 		}
 	}
 }
@@ -72,19 +68,15 @@ void window_update_graphics (char *house, const int *state, int x, int y)
 void window_toggle_state (int *state, int x, int y)
 {
   /* Step 2: Write this function! */
-	/* If the window state is ON (1) */
+	/*
 	if (state[x + 3*y] == 1) {
-		/* Set it to OFF (0) */
 		state[x + 3*y] = 0;
-	/* If the window state is OFF (0) */
 	}else{
-		/* Set it to ON (1) */
 		state[x + 3*y] = 1;
 	}
-	/*
-	If-statement equivalent ternary operator statement for fun :)
-	state[x+3*y] = state[x+3*y]?0:1;
 	*/
+	/* Ternary Operator to set toggle the state given its input */
+	state[x+3*y] = state[x+3*y]?0:1;
 }
 
 
