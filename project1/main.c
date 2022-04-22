@@ -26,7 +26,12 @@
 int solved (const int *state)
 {
   /* Step 4: Rewrite this function! */
-  return 0;
+	int index;
+	for (index = 0; index < 9; index++){
+		if (state[index] == 1)
+			return 0;
+	}
+  	return 1;
 }
 
 
