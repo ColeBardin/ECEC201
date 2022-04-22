@@ -27,10 +27,15 @@ int solved (const int *state)
 {
   /* Step 4: Rewrite this function! */
 	int index;
+	/* Iterate an index through all 9 window indices */
 	for (index = 0; index < 9; index++){
+		/* If any of the windows have state of 1 */
 		if (state[index] == 1)
+			/* Return 0 (Non-winning game state) */
 			return 0;
 	}
+	/* If the for loop can fully execute through all 9 indices without reaching a 1,
+	all the windows are off meaning the game is won */
   	return 1;
 }
 
