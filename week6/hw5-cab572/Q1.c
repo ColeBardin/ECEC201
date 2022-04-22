@@ -13,11 +13,20 @@ int g(int val)
 
 
 /* Your sum function goes here */
+int sum(int (*g)(int i), int i, int j) {
+	int total = 0;
+	for (;i<=j;i++){
+		total += g(i);
+		if (i==j)
+			total += g(i);
+	}
+	return total;
+}
 
 
 int main()
 {
-  printf("Result: %d\n", sum(g, 10, 20));
+  printf("Result: %d\n", sum(g, 4, 3));
 
   return 0;
 }
