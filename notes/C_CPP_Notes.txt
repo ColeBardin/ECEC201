@@ -267,6 +267,32 @@ foo_ptr (%p): 0x7ffe1749af07 // hex address of foo
 */
 
 
+Array Pointers:
+
+int* func(*arr, n){ /* Use of deref op on array var. arrays are passed as pointers by default */
+	arr[0] = 1 /* No need for deref operator here */
+	/*
+	&arr = address of 0th element of arr
+	&arr + n = address of nth element of arr
+	can be seen in scope of main
+	*/
+	return &arr + n -1; /* address of last element of arr since len of arr is n */
+}
+
+int main() {
+
+	int n = 5;
+	int arr[n];
+
+	func(arr, n) /* no need for & operator when passing array */
+	return 0;
+}
+
+
+Function pointers:
+TODO: documen func *
+
+
 
 
 
