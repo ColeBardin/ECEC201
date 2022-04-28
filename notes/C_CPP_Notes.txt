@@ -26,6 +26,10 @@ all can apply to:
 	double
 	char
 
+
+size_t in C99:
+	Largest number than system can count to!
+
 signed int - 4 bytes - used for integers (equivalent to int)
 unsigned int - 4 bytes - can only store positive integers
 short - 2 bytes - used for small integers (-32768 to 32767)
@@ -267,6 +271,25 @@ foo_ptr (%p): 0x7ffe1749af07 // hex address of foo
 */
 
 
+Do not EVER return pointers to local variables in a function!!
+use keyword STATIC to have variables in functions not be marked as invalid after returning
+AUTO variables live in stack frame
+STATIC variables live in read/write DATA SEGMENT
+
+char *foo(){
+	static char fun[] = "my string";
+	return fun; /* Needs keyword STATIC on var to be able to return this */
+}
+int main(){
+	printf("%s",fun());
+
+	char *foo = fun();
+	foo[0] = 'M'; /* allowed since STATIC vars live in RW part of DATA SEG */
+	return0;
+}
+After foo stack frame is invalidated, String Literal of fun is still stored in DATA SEG
+
+
 Array Pointers:
 
 int* func(*arr, n){ /* Use of deref op on array var. arrays are passed as pointers by default */
@@ -288,9 +311,148 @@ int main() {
 	return 0;
 }
 
+arr[n] syntax is same as *(arr + n)
+since array names ARE addresses
+
 
 Function pointers:
 TODO: documen func *
+
+
+
+Strings:
+char my_arr = {'h', 'e', 'l', 'l', 'o'};
+Array of chars^
+
+But can be a string with null char
+char my_str = {'h', 'e', 'l', 'l', 'o', '\0'};
+adding Null char \0 to end of array makes it a string
+
+printf("%s", my_str);
+will start at &my_str will increment in memory until a \0 is reached
+If no \0 char is found it will keep printing memory! (undefined)
+
+
+Or can initialize string with better syntax:
+char my_str[] = "Hello"; /* String Literal, adds null char */
+ALWAYS READ ONLY, IMMUTABLE
+String Literal gets copied to READ ONLY part in memory
+and it gets copied to stack frame when arr is initialized
+
+
+You can get the address of the READ ONLY string literal:
+char *foo = "My string";
+*foo[0] = 'M' is NOT ALLOWED, it will compile but theres a SEG FAULT
+this is IMMUTABLE
+because string literals are addresses
+
+
+but array my_str is mutable!
+Indices of the my_str array can used to edit memory that it spans
+
+
+String literal addresses are READ ONLY so
+char *foo(){
+	return "Literal";
+}
+int main(){
+	printf("%s",foo());
+	return 0;
+}
+Is a valid program since foo returns char*
+
+Strings can only be set on initialization:
+char fun[5]; /* add 1 to length for \0 */
+fun = "fun!"; /* IS NOT ALLOWED */
+
+Proper way:
+char fun[5]; /* destination array must be long enough to store literal. ADD ONE FOR NULL CHAR */
+int i=0;
+while( (fun[i]="Fun!"[i]) != '\0')
+	i++;
+/* assignment returns value of what is being assigned -> copies chars over until "Fun!"[i] is the nul char */
+
+Better func for this: 
+#include <string.h>
+char  *strcpy(char *dst, char *src) {
+	char *p = dst;
+	while  (*dst++ = *scr) != '\0\)
+	return *p; /* allowed since the addresse stored at p is in main stack frame! */
+}
+
+calling:
+char fun[5];
+strcpy(fun, "Fun!");
+
+
+CONST keyword:
+const int foo = 10;
+/* Only sets value of foo when initialized
+Compiler will throw error if assignment after initialization is attempted */
+
+not really useful tho
+
+but mainly used for func parameters
+
+void func(const char *str){ /* Same as 'char const *str' */
+/* CONST means values stored at str address is IMMUTABLE! */
+	str[2] = 'X'; /* will throw error since the chars pointed to are constant */
+
+	/* But str addres can be changed */
+	str = "Some new string";
+	return;
+}
+
+const char *str = char const *str != char * const str
+char * const str means str address is UNCHANGEABLE but chars ARE
+
+const char * char str makes both UNCHANGEABLE
+
+Including const in func declarations allow for funcs to only read the data pointed to by a pointer
+const char *str
+
+char *strcat(char *dst, const char *src); /* Concatenates src to dst */
+size_t strlen(const char *s); /* Returns length of string */
+	sizeof() would return entire length of char array, including null char and extra bits
+
+int strcmp(const char *s1, const char *s2); /* Returns 0 when strings match! or returns difference in ASCII of first different chars */
+
+adding 'n' between str funcs:
+strncmp includes int param n that will perform func until \0 or n is reached
+
+adding 'r' between str funcs:
+strrcmp includes int param n that will perform func in reverse
+
+
+
+
+Structures:
+Stores variable of different types
+
+definition:
+
+struct person {
+	char name[10];
+	unsigned int age;
+	float weight;
+	/* names of members are local to structs */
+}; /* Inlcudes ; */
+
+int main(){
+	struct person bob; /* struct tags 'person' lives in its own namespace, will not collide with vars and func names */
+	
+	bob.age = 38; /* . operator to access members after initialization */
+	strcpy(bob.name, "Bob"); /* Must use strcpy to set strings after initialization */
+
+	struct person cole = {"Cole", 20, 150.5f}; /* members can be set on initialization of struct entry */ 
+	/* Order of members MUST match if initialized like this */
+	return 0;
+}
+
+How are struct members stored in memory?
+&bob = &name
+Address of entry points to first member of struct like arrays
+
 
 
 
