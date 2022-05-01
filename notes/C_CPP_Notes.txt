@@ -452,6 +452,34 @@ int main(){
 How are struct members stored in memory?
 &bob = &name
 Address of entry points to first member of struct like arrays
+Members are offset in memory by the size of the data type of the member
+
+Functions that initialize structs:
+void person_init(struct person *p, char *name, unsigned int name, float weight){
+	(*p).age = age;
+	(*p).weight = weight;
+	strcpyu((*p)).name, name);
+}
+
+call:
+struct person bob;
+person_init(&bob, "Robert" 38, 143.9f);
+Good funtion to include with struct header files
+
+OR WITH ARROW OPERATOR:
+p->member is SHORTHAND FOR (*p).member
+p is address of structure entry
+
+p->age = age;
+p->weight = weight;
+strcpy(p->name, name);
+
+
+
+3 Dereferencing Operators:
+Dereference: *ptr
+Array index: arr[index]				*(array + index)
+Arrow operator: structptr->memebr	(*structptr).member
 
 
 
