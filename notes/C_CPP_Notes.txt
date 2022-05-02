@@ -376,7 +376,7 @@ Better func for this:
 #include <string.h>
 char  *strcpy(char *dst, char *src) {
 	char *p = dst;
-	while  (*dst++ = *scr) != '\0\)
+	while  ((*dst++ = *scr) != '\0\)
 	return *p; /* allowed since the addresse stored at p is in main stack frame! */
 }
 
