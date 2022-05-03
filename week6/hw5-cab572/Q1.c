@@ -28,16 +28,10 @@ int sum(int (*g)(int i), int i, int j) {
 	return total;
 }
 
-
 int main()
 {
-	/* My code to test function */
-	int i,j;
-	if (scanf("%d,%d",&i,&j) != 2)
-		return -1;
+  printf("Result: %d\n", sum(g, 10, 20));
 
-	/* Original code below but i=10, j=20 */
-	printf("Result: %d\n", sum(g, i, j));
-
-	return 0;
+  return 0;
 }
+
