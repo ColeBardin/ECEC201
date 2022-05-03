@@ -71,6 +71,15 @@ void do_file_menu(char *name)
    *
    * Hint: This function is very short (less than 10 lines).
    */
+	int i;
+	for (i=0; i<sizeof(file)/sizeof(file[0]); i++){
+		if (!strcmp(name,file[i].cmd_name)) {
+			file[i].cmd_ptr();
+			return;
+		}
+	}
+	printf("Invalid menu option\n");
+	return;
 }
 
 
@@ -86,7 +95,7 @@ int main()
 
   /* test behavior of supplying invalid menu options */
   do_file_menu("invalid");
-  do_file_menu("badmenuitem")
+  do_file_menu("badmenuitem");
   
   return 0;
 }
