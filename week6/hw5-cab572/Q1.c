@@ -19,10 +19,11 @@ int sum(int (*g)(int i), int i, int j) {
 	if (i==j){
 		total += 2*g(i);
 	}
-	/* Preincrement i and repeat while it is less than j */
-	while (++i<=j){
-		/* Add g(i) to the total while incrementing i */
+	/* Repeat while i is less than j */
+	while (i<=j){
+		/* Add g(i) to the total and increment i */
 		total += g(i);
+		i++;
 	}
 	return total;
 }
