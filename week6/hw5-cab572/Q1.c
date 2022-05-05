@@ -17,7 +17,7 @@ int sum(int (*g)(int i), int i, int j) {
 	int total = 0;
 	/* If i and j are equal, total is g(i) + g(j) */
 	if (i==j){
-		total += 2*g(i);
+		total += g(i);
 	}
 	/* Repeat while i is less than j */
 	while (i<=j){
@@ -30,7 +30,7 @@ int sum(int (*g)(int i), int i, int j) {
 
 int main()
 {
-  printf("Result: %d\n", sum(g, 10, 20));
+  printf("Result: %d\n", sum(g, 2, 3));
 
   return 0;
 }
