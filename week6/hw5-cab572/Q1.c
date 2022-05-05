@@ -30,7 +30,7 @@ int sum(int (*g)(int i), int i, int j) {
 
 int main()
 {
-  printf("Result: %d\n", sum(g, 2, 3));
+  printf("Result: %d\n", sum(g, 10, 20));
 
   return 0;
 }
