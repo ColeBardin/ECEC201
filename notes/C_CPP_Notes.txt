@@ -485,6 +485,79 @@ Arrow operator: structptr->memebr	(*structptr).member
 
 
 
+DYNAMIC MEMORY MANAGEMENT
+malloc() free() realloc()
+unlike Static keyword that puts it in data seg
+
+dynamic memory is stored in HEAP
+size of memory is needed at Runtime not compile time!
+memory is allowcated when specified
+
+MUST #include <stdlib.h>
+defines:
+void *malloc(size_t size); /* no size_t in c89, it is unsigned long */
+void free(void *ptr);
+
+malloc returns address of first byte in HEAP of allocation
+
+First create pointer for type you want to use since malloc retuns void *
+example:
+char *char_ptr; /* Create char * variable first */
+char_ptr = malloc(10); /* Save return val of malloc to char * */
+
+type of dest pointer defines pointer arithmetic
+
+short *foo'
+foo = malloc(6*sizeof(short));
+
+needs 2 changes to convert foo arr to ints
+fix:
+int *foo;
+foo = malloc(6*sizeof(*foo)); /* get the size of what foo poitns to. More dynamic and easier to change */
+
+malloc can be used for any type
+even structs
+example:
+struct stuff {
+	int val
+	char key;
+	float pi;
+}
+
+int main(){
+	struct stuff *foo;
+	foo = malloc(sizeof(*foo)); /* mallocs enough memory to store ONE of whatever foo is */
+}
+
+
+free(address)
+
+only free once, no DOUBLE freeing, runtime will throw errors
+
+int *foo;
+foo = malloc(sizeof(*foo));
+free(foo);
+
+NULL ptr gets returned when Malloc cannot allocate enough memory
+MUST CHECK AFTER MALLOC FOR NULL PTR!!!
+#include <stdlib.h>
+int *foo;
+foo = malloc(sizeof(*foo));
+if (foo == NULL) /* or if(!foo) since NULL is 0 */
+	return EXIT_FAILURE;
+
+
+DEF OF NULL
+#define NULL ((void *)0)
+
+MEMORY LEAKS OCCUR when free is not used
+
+
+
+
+
+
+
 
 
 Loops:
