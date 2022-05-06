@@ -6,7 +6,16 @@
 
 #define ELEMENTS 8
 
+#include <stdlib.h>
 /* Your code goes here */
+int *create_array(int n, int inital_value){
+	int *arr;
+	if (NULL == (arr = malloc(n*sizeof(*arr)))){
+		return arr;
+	}
+	for(;n>0;arr[--n]=inital_value){};
+	return arr;
+}
 
 int main()
 {
