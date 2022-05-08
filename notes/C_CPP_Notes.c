@@ -103,7 +103,7 @@ long double num_ldb = 2.569L
 //L so compiler knows its a 'long double'
 //no 'long float'
 
-Macros:
+acros:
 piece of code which is given some name
 #define directive is used to define a macro
 
@@ -117,7 +117,7 @@ int main() {
 }
 LIMIT (macro def) is replaced with 5 (macro expansion) by compiler
 
-Macros with arguments
+acros with arguments
 // macro with parameter
 #define AREA(l,w) (l*w)
 //(l,w) are params, (l*w) is replacement statement/expansion
@@ -180,7 +180,7 @@ Register: same as auto except compiler tries to store var in microprocessor if a
 	faster use of register variables during runtime than memory ones
 	usually a few var to be stored this way that will be used a LOT
 	note: cannot obtain address of register vars using pointers
-Mutable: allows for data members in 'const' class/structs to be modified without updating other members
+utable: allows for data members in 'const' class/structs to be modified without updating other members
 	class Test {
 	public:
 		int x;
@@ -452,7 +452,7 @@ int main(){
 How are struct members stored in memory?
 &bob = &name
 Address of entry points to first member of struct like arrays
-Members are offset in memory by the size of the data type of the member
+embers are offset in memory by the size of the data type of the member
 
 Functions that initialize structs:
 void person_init(struct person *p, char *name, unsigned int name, float weight){
@@ -493,7 +493,7 @@ dynamic memory is stored in HEAP
 size of memory is needed at Runtime not compile time!
 memory is allowcated when specified
 
-MUST #include <stdlib.h>
+UST #include <stdlib.h>
 defines:
 void *malloc(size_t size); /* no size_t in c89, it is unsigned long */
 void free(void *ptr);
@@ -522,7 +522,7 @@ struct stuff {
 	int val
 	char key;
 	float pi;
-}
+};
 
 int main(){
 	struct stuff *foo;
@@ -539,7 +539,7 @@ foo = malloc(sizeof(*foo));
 free(foo);
 
 NULL ptr gets returned when Malloc cannot allocate enough memory
-MUST CHECK AFTER MALLOC FOR NULL PTR!!!
+UST CHECK AFTER MALLOC FOR NULL PTR!!!
 #include <stdlib.h>
 int *foo;
 foo = malloc(sizeof(*foo));
@@ -550,8 +550,116 @@ if (foo == NULL) /* or if(!foo) since NULL is 0 */
 DEF OF NULL
 #define NULL ((void *)0)
 
-MEMORY LEAKS OCCUR when free is not used
+EMORY LEAKS OCCUR when free is not used
 
+
+
+
+
+
+LINKED LISTS
+Kind of Array that can grow and shrink
+List of elements
+NOT ARRAY: block of elements w/ hard indices
+
+can be used for not immediately known length arrays
+allocates memory as it runs
+
+HOW TO IMPLEMENT
+create struct:
+struct list {
+	int val;
+	struct list *next; /* POINTER TO ANOTHER STRUCT LIST */
+};
+CREATES CHAINS OF LIST STRUCTS
+format:
+head -> 3 -> 2 -> 1 -> NULL (tail)
+
+KEEP TRACK OF HEAD. it is the 'list'
+TAIL points to NULL to indicate end
+
+USAGE
+struct list {
+	int val;
+	struct *next;
+};
+
+/* LIST ADD FUNC */
+void list_add(struct list **head, struct list *item){
+	/* Make ITEM point to what head was pointing to */
+	item->next=*head;
+
+	/* Point HEAD to ITEM */
+	*head = item;
+}
+
+int main() {
+	struct list *head; /* CREATE FIRST STRUCT */
+	struct list *item;
+
+	head = NULL; /* MAKE EMPTY LIST. VAL HERE CHANGES */
+	/* ADDR OF HEAD STAYS THE SAME, VALUE AT HEAD CHANGES */
+
+	item = malloc(sizeof(*item));
+	item->val = 1; /* SET VAL OF ITEM */
+	
+	/* NOW ADD TO LIST */
+	/* HEAD is DOUBLE POINTER, ADDRESS TO ADDRESS OF HEAD */
+	list_add(&head, item); /* USE FUNC TO ADD TO LIST */
+	/* &head is anchor of list */
+	/* HEAD currently points to NULL list_add points it */
+}	
+
+
+how to ITERATE through linked lists:
+struct list {
+	int val;
+	struct list *next;
+};
+
+int main(){
+	struct list *head;
+	struct list *item;
+	int i;
+
+	for (item = head; item; item = item->next)
+		printf("%d ",item->val);
+}
+
+
+
+LIST POP HEAD FUNC
+struct list {
+	int val;
+	struct list *next;
+};
+
+struct list *list_pop_head(struct list **head){
+	struct list *cur /* temp var for current */
+	/* COPY HEAD ELEMENT */
+	cur = *head;
+	if (cur) { /* IF IT IS NOT NULL */
+		*head = cur->next; /* POINT HEAD TO NEXT ELEMENT */
+		cur-nexx = NULL; /* SEVER OLD ELEMENT FROM LIST */
+	}
+	return cur;
+}
+
+int main(){
+	struct list *head;
+	struct lsit *item;
+	int i;
+
+	/* INDIVIDUAL ITEM */
+	item = list_pop_head(&head);
+	free(item);
+
+	/* IN LOOP */	
+	while (item = list_pop_head(&head)){
+		printf("%d\n", item->val);
+		free(item);
+	}
+} 
 
 
 
@@ -987,7 +1095,7 @@ pair  g4(g3);    //copy of g3
 g2 = make_pair(1, 'a');
 g2 = {1, 'a'}
 
-Maps in C++ STL:
+aps in C++ STL:
 maps are containers with keys and values
 no two values can have the same key
 like dictionaries from Python
@@ -1020,7 +1128,7 @@ Unordered Sets in C++ STL:
 unordered_set<string> stringSet;
 stringSet.insert("code");
 
-Multisets in C++ STL:
+ultisets in C++ STL:
 can have same valued items
 multiset<int, greater<int>> gquiz1;
 gquiz.insert(40);
@@ -1050,7 +1158,7 @@ if (!p)
    cout << "Memory allocation failed\n";
 }
 
-Manually deallocating memory:
+anually deallocating memory:
 delete pointer-variable;
 
 delete p;
@@ -1295,7 +1403,7 @@ int main() {
 	return 0;
 }
 
-Multiple parameters:
+ultiple parameters:
 void displayNum( int n1, float n2) {
 	cout << "The int number is " << n1;
 	cout << "The float number is " << n2;
@@ -1411,7 +1519,7 @@ int main() {
 }
 
 
-Multiple parameters
+ultiple parameters
 even with default arguments:
 template <class T, class U, Class V = char>
 class ClassTemplate {
@@ -1750,7 +1858,7 @@ objects can be treated like a function or function pointer
 used along with STLs
 
 to make functor, create an object that overloads the operator()
-MyFunctor(10); is the same as MyFunctor.operator()(10);
+yFunctor(10); is the same as MyFunctor.operator()(10);
 
 // A Functor
 class increment
@@ -2090,7 +2198,7 @@ cannot be reassigned, must be assigned at initialization
 however,
 int &q = p //is valid
 
-Memory Address:
+emory Address:
 pointer has its own memory address and size
 ref shares memory and address with original var
 
@@ -2158,7 +2266,7 @@ Inheritance:
 Dynamic Binding: 
 	code to be executed in response to function call is decided at runtime
 
-Message Passing:
+essage Passing:
 	message for an object is a request for execution of a procedure
 	and will invoke a function in the receiving object that generates result.
 	involves specifying name of obj and name of func and info
@@ -2323,7 +2431,7 @@ Single Inheritance in C++:
 class is allowed to inherit from only one class
 i.e. one sub class is inhereted by one base class only
 
-Multiple Inheritance in C++:
+ultiple Inheritance in C++:
 class can inherit from more than one class.
 i.e. one sub class can come from multiple base classes
 
@@ -2332,7 +2440,7 @@ class SubclassName : AccessMode BaseClass1, AccessMode BaseClass2 ... etc {
 	// body of sub class
 };
 
-Multilevel Inheritance:
+ultilevel Inheritance:
 derived class created from another derived class
 
 class BaseClass {...};
@@ -2345,7 +2453,7 @@ more than one derived class is created from a single base class
 Hybrid (Virtual) Inheritance:
 combining more than one type of inheritance
 
-Multipath Inheritance: Special case
+ultipath Inheritance: Special case
 Derived Class with two base classes which share a same base class
 can create ambiguity since bottom class will have two copies of top base class members
 class ClassA {
@@ -2646,7 +2754,7 @@ Output of cbegin and cend: 1 2 3 4 5
 Output of rbegin and rend: 5 4 3 2 1 
 Output of crbegin and crend : 5 4 3 2 1
 
-More operations for vectors:
+ore operations for vectors:
 size()		num of elements
 max_size()	max number of elements vector can hold
 capacity()	size of storage space allocated to vector
@@ -2662,7 +2770,7 @@ front()			returns a ref to first element
 back()			returns ref to last element
 data()			returns a direct pointer to the memory array used internally
 
-Modifiers:
+odifiers:
 assign()	assignes new val to vector elements by replacing old ones
 push_back()	push elements into vector from back
 pop_back()	pop or remove elements from back of vector
@@ -2676,7 +2784,7 @@ emplace_back()	insert new element into vector at the end
 Queues in STL:
 containers that operate in first in first out (FIFO) arrangement
 elements are inserted from back and deleted from front
-Many similar functions to vectors
+any similar functions to vectors
 pop() 		deletes first element
 push(g)		adds 'g' to back
 emplace()	inserts a new element in queue container to end
@@ -3194,7 +3302,7 @@ is_permutation	test whether range is permutation of another
 search		search range for subsequence
 search_n	search range for element
 
-Modifying sequence operations
+odifying sequence operations
 copy		copy range of elements
 copy_n		copy elements
 copy_if		copy certain elements of range
@@ -3248,7 +3356,7 @@ upper_bound	return iterator to upper bound
 equal_range	get subrange of equal elements
 binary_search	test if value exists in sorted subsequence
 
-Merge (operating on sorted ranges)
+erge (operating on sorted ranges)
 merge		merge sorted ranges
 inplace_merge	merge consecutive sorted ranges
 includes	test whether sorted range includes another sorted range
