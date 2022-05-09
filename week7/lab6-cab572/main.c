@@ -8,7 +8,34 @@ struct queue {
 
 
 /* Write your enqueue() and dequeue() functions here */
+void enqueue(struct queue **Q, struct queue *item){
+	struct queue *p;
+	
+	if ( (!*Q) ){
+		printf("EN: Head is NULL\n");
+		*Q = item;
+		item->next = NULL;
+		return;
+	}
+	if ( !(*Q)->next ){
+		printf("EN: Head points to null\n");
+		(*Q)->next = item;
+		item->next = NULL;
+		return;
+	}
+	for (p=*Q; (p->next)->next; p = p->next);
+	printf("EN: Head doesn't point to null\n");
+	p->next = item;
+	item->next = NULL;
+	return;	
+}
 
+struct queue *dequeue(struct queue **Q){
+	struct queue *p;
+	p = (*Q)->next;
+	(*Q)->next = ((*Q)->next)->next;
+	return(p);
+}
 
 
 /*****************************************************/
@@ -46,7 +73,7 @@ int main(int argc, char **argv)
   }
 
   /* unload the queue and print the value of each item to the screen */
-  while (item = dequeue(&Q)) {
+  while ( (item = dequeue(&Q)) ) {
     printf("%d\n", item->val);
     free(item);
   }
