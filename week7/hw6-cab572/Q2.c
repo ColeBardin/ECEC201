@@ -10,9 +10,12 @@
 /* Your code goes here */
 int *create_array(int n, int inital_value){
 	int *arr;
+	/* Error handle malloc of n ints */
 	if (NULL == (arr = malloc(n*sizeof(*arr)))){
+		/* Retur arr (NULL PTR) */
 		return arr;
 	}
+	/* Set each value in array to initial_value */
 	for(;n>0;arr[--n]=inital_value){};
 	return arr;
 }
