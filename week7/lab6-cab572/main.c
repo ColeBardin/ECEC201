@@ -23,8 +23,8 @@ void enqueue(struct queue **Q, struct queue *item){
 		item->next = NULL;
 		return;
 	}
-	for (p=*Q; (p->next)->next; p = p->next);
-	printf("EN: Head doesn't point to null\n");
+	for (p=*Q; p->next; p = p->next);
+	printf("EN: Head points to %p\n",(*Q)->next);
 	p->next = item;
 	item->next = NULL;
 	return;	
@@ -32,9 +32,14 @@ void enqueue(struct queue **Q, struct queue *item){
 
 struct queue *dequeue(struct queue **Q){
 	struct queue *p;
-	p = (*Q)->next;
-	(*Q)->next = ((*Q)->next)->next;
-	return(p);
+	
+	p = *Q;
+	if (p) {
+		*Q = p->next;
+		p->next = NULL;
+	}
+
+	return p;
 }
 
 
