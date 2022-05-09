@@ -37,7 +37,9 @@ int list_count(struct list *head)
 	/* rewrite this function! */
 	int i=0;
 	struct list *item;
+	/* Repeat until current item points to NULL, incrementing i each step */
 	for (item = head; item; item = item->next, i++);
+	/* Free temp struct instance */
 	free(item);	
 	return i;
 }
@@ -48,12 +50,17 @@ struct list *list_pop_tail(struct list **head)
 	/* rewrite this function! */
 	struct list *item;
 	struct list *del;
+	/* If the Head is Null or the Head points to NULL */
 	if ( (!*head) || (!(*head)->next) ) {
+		/* Set Head to NULL and return it */
 		*head = NULL;
-		return NULL;
+		return *head;
 	}
+	/* Iterate until item is second to last item */
 	for (item = *head; (item->next)->next; item = item->next);
+	/* Save the last item in del instance */
 	del = item->next;
+	/* Point second to last item to NULL */
 	item->next = NULL;
 	return del;
 }
@@ -70,14 +77,16 @@ int main()
 		item = malloc(sizeof(*item));
 		item->val = i;
 		list_add_head(&head, item);
-		printf("Added %p (val: %d) to list.\n", item, item->val);
+		printf("Added %p (val: %d) to list.\n", (void *)item, item->val); 
+		/* Cast item to void pointer get rid of undefined behavior from sample code */
 	}
 
 	printf("# of items: %d\n", list_count(head));
 
 	/* remove each item and print its value */
-	while (item = list_pop_tail(&head)) {
-		printf("Removed %p (val: %d)\n", item, item->val);
+	while ( (item = list_pop_tail(&head)) ) { /* Fixed erroneous code by putting assignment in paranthesis */
+		printf("Removed %p (val: %d)\n", (void *)item, item->val);
+		/* Cast item to void pointer get rid of undefined behavior from sample code */
 		free(item);
 	}
 
