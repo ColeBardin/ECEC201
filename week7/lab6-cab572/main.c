@@ -10,35 +10,40 @@ struct queue {
 /* Write your enqueue() and dequeue() functions here */
 void enqueue(struct queue **Q, struct queue *item){
 	struct queue *p;
-	
-	if ( (!*Q) ){
-		printf("EN: Head is NULL\n");
-		*Q = item;
-		item->next = NULL;
-		return;
-	}
-	if ( !(*Q)->next ){
-		printf("EN: Head points to null\n");
-		(*Q)->next = item;
-		item->next = NULL;
-		return;
-	}
-	for (p=*Q; p->next; p = p->next);
-	printf("EN: Head points to %p\n",(*Q)->next);
-	p->next = item;
+	/* Point ITEM to NULL */
 	item->next = NULL;
+	/* If HEAD is NULL (EMPTY LIST) */
+	if ( (!*Q) ){
+		/* Set HEAD to ITEM */
+		*Q = item;
+		return;
+	}
+	/* If HEAD points to NULL (ONE ELEMENT IN LIST) */
+	if ( !(*Q)->next ){
+		/* Point HEAD to ITEM */
+		(*Q)->next = item;
+		return;
+	}
+	/* Iterate p through list until it is last element (Points to NULL) */
+	for (p=*Q; p->next; p = p->next);
+	/* Point p to item (Add it to end of list) */
+	p->next = item;
 	return;	
 }
 
 struct queue *dequeue(struct queue **Q){
 	struct queue *p;
-	
+
+	/* Set temp struct to HEAD */	
 	p = *Q;
+	/* If HEAD is not NULL */
 	if (p) {
+		/* Set HEAD to be next element */
 		*Q = p->next;
+		/* Point disgarded element to NULL */
 		p->next = NULL;
 	}
-
+	/* Return disgarded element address */
 	return p;
 }
 
