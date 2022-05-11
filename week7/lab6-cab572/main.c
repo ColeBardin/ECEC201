@@ -18,12 +18,6 @@ void enqueue(struct queue **Q, struct queue *item){
 		*Q = item;
 		return;
 	}
-	/* If HEAD points to NULL (ONE ELEMENT IN LIST) */
-	if ( !(*Q)->next ){
-		/* Point HEAD to ITEM */
-		(*Q)->next = item;
-		return;
-	}
 	/* Iterate p through list until it is last element (Points to NULL) */
 	for (p=*Q; p->next; p = p->next);
 	/* Point p to item (Add it to end of list) */
