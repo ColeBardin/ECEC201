@@ -10,19 +10,19 @@ struct queue {
 /* Write your enqueue() and dequeue() functions here */
 void enqueue(struct queue **Q, struct queue *item){
 	struct queue *p;
-	/* Point ITEM to NULL */
+	/* Point Item to NULL */
 	item->next = NULL;
-	/* If HEAD is NULL (EMPTY LIST) */
-	if ( (!*Q) ){
-		/* Set HEAD to ITEM */
-		*Q = item;
+	/* If HEAD is not NULL */
+	if (*Q) {
+		/* Iterate p through list until it is last element (Points to NULL) */
+		for (p=*Q; p->next; p = p->next);
+		/* Point p to item (Add it to end of list) */
+		p->next = item;
 		return;
 	}
-	/* Iterate p through list until it is last element (Points to NULL) */
-	for (p=*Q; p->next; p = p->next);
-	/* Point p to item (Add it to end of list) */
-	p->next = item;
-	return;	
+	/* Else, HEAD is NULL (EMPTY LIST). Set HEAD to item to begin list */
+	*Q = item;
+	return;
 }
 
 struct queue *dequeue(struct queue **Q){
