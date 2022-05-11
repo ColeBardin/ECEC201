@@ -8,14 +8,14 @@ struct queue {
 
 
 /* Write your enqueue() and dequeue() functions here */
-void enqueue(struct queue **Q, struct queue *item){
+void enqueue(struct queue **Q, struct queue *item) {
 	struct queue *p;
 	/* Point Item to NULL regardless of state of list */
 	item->next = NULL;
 	/* If HEAD is not NULL */
 	if (*Q) {
 		/* Iterate p through linked list until it is last element (Points to NULL) */
-		for (p=*Q; p->next; p = p->next);
+		for (p=*Q; p->next; p = p->next); /* No need for a body of the for loop since cycling p is the iteration statement */
 		/* Now that p is the last element, point it to item (item is now last element of list since it points to NULL already) */
 		p->next = item;
 		return;
@@ -25,7 +25,7 @@ void enqueue(struct queue **Q, struct queue *item){
 	return;
 }
 
-struct queue *dequeue(struct queue **Q){
+struct queue *dequeue(struct queue **Q) {
 	struct queue *p;
 	/* Set temp struct to HEAD */	
 	p = *Q;
@@ -33,10 +33,10 @@ struct queue *dequeue(struct queue **Q){
 	if (p) {
 		/* Set HEAD to be next element */
 		*Q = p->next;
-		/* Point disgarded element to NULL */
+		/* Point dequeued element to NULL */
 		p->next = NULL;
 	}
-	/* Return disgarded element address */
+	/* Return address of dequeued element */
 	return p;
 }
 
