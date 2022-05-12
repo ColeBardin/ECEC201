@@ -663,6 +663,182 @@ int main(){
 
 
 
+CREATING NEW NAMES FOR EXISTING TYPES
+typedef
+
+#include <stdlib.h>
+
+struct person {
+	char name[100];
+	int age;
+};
+
+typedef struct person Person; /* Create typedef for struct person that is called Person */
+/* Person shorthand for struct person */
+
+int main() {
+	Person bob;
+	strcpy(bob.name, "Bob");
+	bob.age = 20;
+}
+/* Don't over typedef */
+
+
+
+
+
+FILE HANDLING:
+on UNIX systems, GUIs need to ask to OS for help to open files
+C STDLIB helps manage interfacing with OS specific file shit
+stdin, stdout, stderr are considered 'files' abstracted from program 
+
+all file functions begin with 'f' for FILE
+
+#include <stdlib.c>
+FILE *fopen(char *fpath, const char *mode);
+	adds file to OS filedescriptor
+	adds filestream to HEAP
+fp = fopen("doc.txt", "w+");
+
+FILE * file pointer
+Holds address of filesream in HEAP
+DO NOT DEREFERENCE!
+pass it to libc with various functions
+holds position in file as well
+
+ex:
+fprintf(fp, "Hello World\n");
+/* Just like printf but takes filestream F* arg */
+
+printf("Hello World") = fprintf(stdout, "Hello World") /* Printf sends it to stdout 'file' */
+
+
+OPENING FILES:
+FILE *fopen(char *pathname, const char *mode);
+RETURNS NULL PTR on fail (persmissions, invalid name)
+	ERROR HANDLE fopen calls
+
+
+CLOSING FILES
+int fclose(FILE *fp);
+RETURNS Status
+0 - success
+EOF - 
+
+#include <stdlib.h>
+int main() {
+	FILE *fp;
+	fp = fopen("passwords.txt", "w+");
+	if (fp == NULL) {
+		printf("%s", errno);
+		return -1;
+	}
+	fprintf(fp, "sDW&D&7dt");
+	if (fclose(fp) != 0) 
+		return -1;
+	return 0;
+}
+
+
+Plaintext modes:
+"r" - Reading, positions stream at beginning of file, fails if file doesn't exist
+"r+" - Read PLUS Write, positions steam at beginning of file, fails if file doesn't exist
+
+"w" - Writing, positions stream at beginning of file, creates file if it doesn't exist, erases conents of previous file
+"w+" - Writing PLUS Read, positions stream at beginning of buffer, creates file if needed, erases contents of previous file
+
+"a" - Append, Writing, positions stream at end of file
+"a+" - Append, Writing AND Reading, stream at end of file, 
+
+FOR BINARY FILES:
+Same behavior as plaintext files but add "b" to end of mode:
+"rb"
+"r+b"
+"wb"
+"w+b"
+"ab"
+"a+b"
+
+Difference between Binary and Plain filemodes:
+UNIX uses only \n chars for newlines
+DOS/Windows uses \r\n for newlines
+C automatically converts 2 byte newline characters on Windows 1 byte
+
+
+FGETC and FPUTC
+int fgetc(FILE *fp); /* Returns ASCII->Binary of char at current fileposition and advances position by 1 */
+/* EOF isn't a char, it's a number: -1 */
+get all chars from file:
+#include <stdlib.h>
+#include <stdio.h>
+int main(){
+	int c;
+	FILE *fp;
+	if ( (fp = fopen("doc.txt", "r") != NULL );
+	while ( (c = fgetc(fp)) != EOF )
+		printf("%c",c);
+	fclose(fp);
+	return 0;
+}
+
+int fputc(const char *c, FILE *fp); /* Writes current char c at current fileposition in filepointer fp */
+/* Overwrites whatever is at current fileposition for fp */
+fputc can EXTEND end of file if called when fileposition is at EOF
+
+
+MOVING AROUND FILES:
+int fseek(FILE *fp, long int offset, int whence); /* Seeks to WHENCE + OFFSET */
+WHENCE options:
+SEEK_SET /* Start of file */
+SEEK_END /* End of file */
+SEEK_CUR /* Current position */
+
+Textfiles limites what offset can be
+Binary can be anything
+
+For textfiles, offset can only be 0 or a val returned from ftell
+
+long int ftell(FILE *fp) /* returns byte offset from start of file of fp */
+
+long int sav;
+sav = ftell(fp); /* Save current file position */
+fseek(fp, 0, SEEK_END); /* Go to end of file */
+fputc('!', fp); /* Put '!' at end of file */
+fseek(fp, sav, SEEK_SET); /* Go to previously saved position */
+fputc(' ', fp); /* Write ' ' to previous position in file */
+
+
+REWIND func
+void rewind(fp)
+is EQUAL to:
+fseek(fp, 0, SEEK_SET);
+/* Shorthand to reset file position to beginning of file */
+
+
+
+String Placement:
+char *fgets(char buffer, long int buffer_size, FILE *fp)
+Reads from file until NEWLINE CHAR OR after filling Buffer size
+	will automatically null terminate buffer even if it runs out of room
+Automatically adds newline AND  nullchar to BUFFER 
+Returns buffer address on success
+Returns NULL ptr on failure, when attempting to read EOF
+ex:
+#define BUFF_SIZE	(32) /* Predefined in STDLIB */
+int main () {
+	FILE *fp;
+	char buffer[BUFF_SIZE];
+	fp = fopen("doc.txt", "r+");
+	while (fgets(buffer, BUFF_SIZE, fp)) 
+		printf("%s", buffer); /* Leaves previous data in buffer each iteration if not overwritten by line +\n+\0 */
+	fclose(fp);
+	return 0;
+}
+
+
+int fputs(const char *c, FILE *fp)
+
+
 
 
 
@@ -677,6 +853,9 @@ condition is evaluated next, boolean statement
 if condition is true, iterator statement is executed, usualyl changes the value of init variable
 again condition is evaluated
 continues until condition is false and loop terminates
+
+
+
 
 
 int n = 5, sum = 0
