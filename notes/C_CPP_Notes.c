@@ -691,6 +691,8 @@ FILE HANDLING:
 on UNIX systems, GUIs need to ask to OS for help to open files
 C STDLIB helps manage interfacing with OS specific file shit
 stdin, stdout, stderr are considered 'files' abstracted from program 
+they are BUFFERED FILESTREAMS
+
 
 all file functions begin with 'f' for FILE
 
@@ -834,9 +836,245 @@ int main () {
 	fclose(fp);
 	return 0;
 }
+if buffer is not large enough
+ contuning to iterate that loop will still successfully get the entire string and other lines
+
+unsigned int fputs(const char *buffer, FILE *fp); /* Puts string stored in Buffer to current file position in fp */
+int main() {
+	FILE *fp;
+	char buffer[BUFFER_SIZE];
+	fp = fopen("doc.txt", "w");
+	scanf("%s", buffer);
+	fputs(buffer, BUFFER_SIZE, fp);
+	fflush(fp); /* Actually flushes file buffer to file */
+	fclose(fp);
+	return 0;
+}
 
 
-int fputs(const char *c, FILE *fp)
+FFLUSH func
+void fflush(FILE *fp); /* Writes data in file buffer to its file */
+/* Buffer automatically flushes when it fills */
+fflush forces buffer to be flushed to disk
+Good for when there is not a predefined amount of writing that will be done to a file
+but not very useful overall
+
+
+
+
+Formatted inputs to FILEs
+
+int fprintf(FILE *stream, char *format-string, argument-list); /* Moves current file position */
+int fscanf(FILE *stream, const char *format-string, argument-list); /* Scans for format, moves file position after format */
+/* Same as printf and scanf but with specified STREAMS */
+
+#include <stdlib.h>
+#include <stdio.h>
+struct player {
+	char name[25];
+	unsigned int age;
+	int points;
+	struct player *next;
+};
+int main() {
+	FILE *fp;
+	int ret;
+	struct player *item, *players = NULL;
+	fp = fopen("data.csv", "r");
+
+	while(1){
+		item = malloc(sizeof(*item));
+		ret = scanf(fp, "%[^,], %d, %d\n", &item->name, &item->age, &item->points);
+		if (ret == EOF) {
+			free(item);
+			break;
+		}
+		add_player(&players, item)
+	}
+	fclose(fp);
+	return 0;
+}
+
+%[^,] is a SCANSET
+
+SCANSET EXAMPLES: %
+[A-Z]	Sequence of uppercase chars
+[0-9]	Sequence of digit chars
+[^\n]	Everything up to the newline
+[^,]	Everything up to the comma
+[^z]	Everything up to z
+
+
+FILE STREAMS
+stdin, stdout, stderr
+
+stdout is NEWLINE BUFFERED
+meaning printing one char will not immediately be printed to screen
+waits for newline or buffer fill
+
+stderr is NOT NEWLINE BUFFERED
+it is flushed IMMEDIATELY
+
+printf should be used for program output
+fprintf(stderr...) errors
+
+separations are useful because outputs can be parsed
+pipe stdout from one file to another or to a file
+using fprintf(stderr...) prints errors to screen but not caught by pipe or other stdout streams
+EXAMPLE: 
+> shell command can be given file descriptors!!
+./foo 1> doc.tx /* FD 1 is STDOUT */
+./foo 2> err.log /* FD 2 is STDERR */
+./foo 0> usr.log /* FD 0 is STDIN */
+or
+./foo > doc.txt 2> err.log /* Not specifying a FD defaults to FD 1, STDOUT. NOT 0 */
+
+Good practice to separate STDERR and STDOUT printing!!
+
+
+
+
+WORKING WITH BINARY FILES:
+binary mode
+supply "b" to file mode
+
+FWRITE
+size_t fwrite(void *ptr, size_t size, size_t num, FILE *fp) /* Writes to binary file */
+/* Returns num elements written, each element is SIZE bytes long. Should return NUM if success */
+	void *ptr: Pointer to 1st byte of 1st element to write /* Address in memory of the stuff you want to write */
+	size_t size: Size of each element in bytes /* unsigned long in C89 */
+	size_t num: Number of elements to write to file
+	FILE *fp: File pointer to binary file
+
+FREAD
+size_t fread(void *ptr, size_t size, size_t num, FILE *fp) /* Reads NUM SIZE elements from file and returns number read */
+	void *ptr: Memory address for first element to be written to
+	size_t size: Size of each element in bytes
+	size_t num: Number of elements of SIZE to be read
+	FILE *fp: File pointer to openen file
+
+Example of fwrite and fread:
+#include <stdio.h>
+#include <stdlib.h>
+struct emplyee {
+	unsigned int id;
+	unsigned in age;
+	float salary;
+	unsigned int years;
+}; /* 16 bytes per struct instance */
+int main() {
+	FILE *fp;
+	size_t ret;
+	struct employee *staff; /* Not necessarily making an instance, but making a type ptr for the array later */
+	char *fn = "staff.dat";
+	/* Write */
+	staff = malloc(2*sizeof(*staff)); /* Creates array for 2 employees */
+	/* SET staff vals staff[0].id = 11213; ... */
+	fp = fopen(fn, "wb"); /* Write with binary mode */
+	if (!fp) {
+		fprintf(stderr, "Failed to open %s\n", fn);
+		return EXIT_FAILURE;
+	}
+	ret = fwrite(staff, sizeof(*staff), 2, fp);
+	if (ret != 2) {
+		fprintf(stderr, "Failed to write to %s\n", fn);
+		return EXIT_FAILURE;
+	}
+	free(staff);
+	printf("Wrote %zu employees to %s\n", ret, fn);
+	fclose(fp);
+
+	/* Now read */
+	fp = fopen(fn, "rb");
+	if (!fp) {
+		fprintf(stderr, "Failed to open %s\n", fn);
+		return EXIT_FAILURE;
+	}
+	staff = malloc(2*sizeof(*staff));
+	ret = fread(staff, sizeof(*staff), 2, fp); /* FREAD 2 elements from fp of size STAFF to staff */
+	if (ret != 2) {
+		fprintf(stderr, "Read failure: read %zu of 2\n", ret);
+		return EXIT_FAILURE;
+	}
+	fclose(fp);
+	free(staff);
+	return 0;
+}	
+/* Byte order is stored by OS Standards */
+When writing in little Endian, byte order is okay but sequence order is backwards
+00 00 00 01 : 1 in dec gets written as 01 00 00 00 in Little Endian binary coded dec
+BE CAREFUL WHEN READING THESE BYTES
+binary write was made for BIG ENDIAN
+
+
+Data is Data
+fread can be used to read each byte into memory RAW
+unsigned char data[16];
+FILE *fp;
+int i;
+fp = fopen("staff.dat", "rb"); /* handle NULL PTR return */
+while ( (ret=fread(data, sizeof(*data), 16, fp)) ) {
+	for (i=0; i<ret; i++) {
+		printf("%02x ", data[i]);
+	}
+	printf("\n");
+}
+fclose(fp); 
+
+BINARY FSEEK AND FTELL
+fseek() and ftell() Same for Binary except fseek can take any int for OFFSET
+int fseek(FILE *fp, long int offset, int whence); /* Seeks to WHENCE + OFFSET */
+long int ftell(FILE *fp); /* returns byte offset from start of file of fp */
+void rewind(FILE *fp); /* Goes to file position 0 */
+
+SAME AS TEXT FUNCS BUT:
+	offset for fseek can be anynumber
+	moving 1 byte ALWAYS moves 1 byte
+
+
+fseek and ftell GOTCHAS
+TEXT MODE:
+	fseek offsets:
+		-hardcoded to be 0
+		-val returned by ftell
+	ftell returns:
+		-not number of bytes on WINDOWS
+		-DO NOT measure filesize with fseek(fp, 0, SEEK_END) and ftell(fp)
+
+BINARY MODE:
+	fseek(fp, 0, SEEK_END) IS UNDEFINED BEHAVIOR!!!!
+		-may work on implementations but may not be portable
+
+BOTH MODES:
+	ftell(fp) returns LONG INT
+		-could be issue for large files with 32-bit long int
+
+
+
+BINARY or TEXT format?
+TEXT MODE:
+	-portable between architechtures
+		no endian issues or type size issues
+	-produce larger files
+		61907 is 6 byte string
+	-slower read/write
+		requires string->rep for read
+		requires rep->string for write
+
+BINARY MODE:
+	-portability issues
+		little v big endian, type size difference
+	-produce smaller files
+		61907 is 2 bytes short int
+	-faster read/write
+		no conversion necessary
+		file holds native data representations
+		big/little endian conversion
+
+
+
+
+
 
 
 
