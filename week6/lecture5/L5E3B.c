@@ -1,12 +1,12 @@
 #include <stdio.h>
-        char *get_fun()
-        {
-                static char fun[]="Fun!";
-                return fun;
-        }
+char *get_fun()
+{
+	static char fun[]="Fun!";
+	return fun;
+}
 
-        int main()
-        {
-                printf("\n%s", get_fun());
-                return(0);
-        }
+int main()
+{
+	printf("\n%s", get_fun());
+	return(0);
+}
