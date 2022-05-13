@@ -46,7 +46,7 @@ int main()
 	FILE *fp;
 	unsigned char buffer[10];
 	char fn[] = "ascii_chars.txt";
-	unsigned int ret, offset, dig, temp;
+	unsigned int ret, offset;
 	offset = 0;
 	/* Open the input file in Binary Read mode */
 	fp = fopen(fn, "rb");
@@ -62,23 +62,12 @@ int main()
 
 	/* Read file binary to buffer until it returns NULL */
 	while ( (ret = fread(buffer, sizeof(*buffer), 10, fp)) ) {
-		/* TODO: look up if there is a way to pad zeroes to be 6 chars total */
-		temp = offset;
-		dig = 0;
-		do {
-			temp /= 10;
-			dig++;
-		} while (temp);
-		/* Print respective whitespace for offset integer */
-		for (temp = 0; temp<6-dig; temp++) {
-			printf(" ");
-		} 
-		/* Print Offset and end spacing */
-		printf("%d  ", offset);
+		/* Print the offset variable padded to 6 characters with a space following */
+		printf("%6d  ", offset);
+		offset += 10;
 		/* Call functions to print hex and char */
 		print_bytes_hex(buffer, ret);
 		print_bytes_char(buffer, ret);
-		offset += 10;
 	}
 	/* Close the filepointer */
 	fclose(fp);
