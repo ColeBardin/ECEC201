@@ -60,9 +60,9 @@ int main()
 	printf("Offset              Bytes              Characters\n");
 	printf("------  -----------------------------  ----------\n");
 
-	/* Read file binary to buffer until it returns NULL */
+	/* Read file binary to buffer until it returns NULL (EOF) */
 	while ( (ret = fread(buffer, sizeof(*buffer), 10, fp)) ) {
-		/* Print the offset variable padded to 6 characters with a space following */
+		/* Print byte offset padded to 6 characters with a space following */
 		printf("%6d  ", offset);
 		offset += 10;
 		/* Call functions to print hex and char */
