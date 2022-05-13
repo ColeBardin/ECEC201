@@ -37,7 +37,7 @@ int main()
 			/* Increment line number and reset character count */
 			line++;
 			count = 0;
-		} else {
+		} else if (c != '\r') {
 			/* Increment character count if char is anything other than newline */
 			count++;
 		}
