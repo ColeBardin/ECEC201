@@ -10,12 +10,15 @@ char *duplicate(const char *src){
 	int i;
 	char *dst;
 
-	/* Get length of src string manually if string.h shouldn't be included. else just use strlen()*/
-	for(i=0;src[i]!='\0';i++){};
+	/* Get length of src string manually if string.h shouldn't be included. else just use strlen() */
+	for(i=0;src[i]!='\0';i++);
 	/* malloc length of src struing plus 1 for null char */
 	dst = malloc(i+1);
-	
-	i=0;
+	/* Return NULL if Malloc fails */
+	if (!dst) 
+		return NULL;
+	/* Reset i to be 0 */
+	i = 0;
 	/* Copy src string into memory allocated for dst string */
 	while ((dst[i] = src[i]) != '\0'){
 		i++;

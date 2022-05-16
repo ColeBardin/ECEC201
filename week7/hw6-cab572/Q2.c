@@ -15,8 +15,8 @@ int *create_array(int n, int inital_value){
 		/* Retur arr (NULL PTR) */
 		return arr;
 	}
-	/* Set each value in array to initial_value */
-	for(;n>0;arr[--n]=inital_value){};
+	/* Set each value in array to initial_value, starting from the last value at index n-1 */
+	for(;n>0;arr[--n]=inital_value);
 	return arr;
 }
 

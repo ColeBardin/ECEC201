@@ -52,9 +52,12 @@ struct list *list_pop_tail(struct list **head)
 	struct list *del;
 	/* If the Head is Null or the Head points to NULL */
 	if ( (!*head) || (!(*head)->next) ) {
-		/* Set Head to NULL and return it */
+		/* Save the address of head (for case when *head->next is NULL */
+		del = *head;
+		/* Set Head to NULL (for case when *head->next is NULL */
 		*head = NULL;
-		return *head;
+		/* Return del (NULL if head was NULL, address of last deleted element if head wasn't NULL */
+		return del;
 	}
 	/* Iterate until item is second to last item */
 	for (item = *head; (item->next)->next; item = item->next);
