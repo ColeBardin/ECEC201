@@ -9,18 +9,19 @@ int *find_largest (int *a, int n)
 {
 	int max = a[0]; /* Create var to hold max, init to first element */
 	int index; /* Create index variable */
+	int max_i = 0; /* Variable to hold index of max value */
 	/* Iterate through each element of the array */
 	for (index=0;index<n;index++){
 		/* If the current element is bigger than the previous max */
 		if (a[index] > max){
 			/* Set max to the current value */
 			max = a[index];
+			/* Store current index of max value */
+			max_i = index;
 		}
 	}
-	/* Use main stack frame address to store max value */
-	*a = max;
-	/* Return address of max value */
-	return a;
+	/* Return address of max value in the array */
+	return &a[max_i];
 }
 
 
