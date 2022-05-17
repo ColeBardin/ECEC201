@@ -82,21 +82,18 @@ int get_parms(Parms *parms, const char *modes, int argc, char **argv)
 char *filename_add_ext(const char *filename, const char *ext)
 {
 	/* Your code goes here! */
-	int i,j,k;
+	int len;
 	char *dst;
-	/* Get lenght of non-NULL chars in each string */
-	for (i=0; filename[i] != '\0'; i++);
-	for (j=0; ext[j] != '\0'; j++);
-	/* Malloc space on the HEAP for a concatenation of both strings */
-	dst = malloc(i+j+1);
-	/* Copy the filename to the destination string */
-	for (k=0; k<i; k++)
-		dst[k] = filename[k];
-	/* Copy the extension to the destination string, overwrites nullchar from filename str */
-	for (k=0; k<j; k++);
-		dst[i+k] = ext[k];
-	/* Resturn memory address filename.ext on HEAP */
-	return *dst;
+	/* Get the length of both strings */
+	len = strlen(filename) + strlen(ext);
+	/* Malloc a char ptr long enough for both strings and a null char */
+	dst = malloc(len+1)
+	/* Copy the flename to the destination string */
+	strcpy(dst, filename);
+	/* Concatenate the extension to the destination string */
+	strcat(dst, ext);
+	/* Return address of full filename.ext */
+	return dst; 
 }
 
 
@@ -111,16 +108,15 @@ char *filename_rm_ext(const char *filename)
 {
 	/* Your code goes here! */
 	char *dst;
-	int i,j;
+	int len, index;
 	/* Count total length of filename string */
-	for (i=0; filename[i] != '\0'; i++);
+	len = strlen(filename);
 	/* Count backwards from end of filename until hitting a period */
-	for (j=i; filename[i] != '.'; j--); /* Makes j index of last occuring period in filename */
+	for (index=len; filename[index] != '.'; index--); /* Makes index var the index of last period in filename */
 	/* Malloc space up to last period of filename */
-	dst = malloc(j+1);
-	/* Copy the original filename to destination string */
-	for (i=0; i<j; i++)
-		dst[i] = filename[i]; 
+	dst = malloc(index);
+	/* Copy the characters from the filename excluding the extension (index # of chars) */
+	strncpy(dst, filename, index);
 	/* Return memory address of filename without ext on HEAP */
 	return dst;
 }
@@ -131,11 +127,15 @@ char *filename_rm_ext(const char *filename)
 int check_ext(const char *filename)
 {
 	/* Your code goes here! */
-	int i;
-	for (i=0; filename[i] != '\0'; i++);
-	if (!strcmp(&filename[i-4], ".rle"))
+	int len;
+	/* Get the string length */
+	len = strlen(filename);
+	/* Compare last 4 chars of filename to ".rle" */
+	if (!strcmp(&filename[len-4], ".rle"))
+		/* Return 1 if they match */
 		return 1;
 	else
+		/* Return 0 if filename does not end with ".rle" */
 		return 0;
 }
 
