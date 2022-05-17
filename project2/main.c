@@ -111,15 +111,17 @@ char *filename_rm_ext(const char *filename)
 {
 	/* Your code goes here! */
 	char *dst;
-	int i,j,k;
+	int i,j;
+	/* Count total length of filename string */
 	for (i=0; filename[i] != '\0'; i++);
-	for (j=i; filename[i] != '.'; j--);
-	
+	/* Count backwards from end of filename until hitting a period */
+	for (j=i; filename[i] != '.'; j--); /* Makes j index of last occuring period in filename */
+	/* Malloc space up to last period of filename */
 	dst = malloc(j+1);
-
+	/* Copy the original filename to destination string */
 	for (i=0; i<j; i++)
 		dst[i] = filename[i]; 
-
+	/* Return memory address of filename without ext on HEAP */
 	return dst;
 }
 
