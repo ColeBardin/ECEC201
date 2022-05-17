@@ -146,6 +146,25 @@ int check_ext(const char *filename)
 int check_magic(FILE *fp)
 {
 	/* Your code goes here! */
+	char dst[] = "0000"; /* Create dst string with 4 chars and a NULL char */
+	char rle[] = "!RLE";
+	int ret;
+	/* Attempt to read 4 bytes from filepointer */
+	ret = fread(dst, sizeof(*dst), 4, fp);
+	if (ret == 4) {
+		/* If 4 bytes were read, compare them to magic byte sequence */
+		if(!strcmp(dst, rle)) {
+			/* Return 1 if they  match */
+			return 1;
+		/* Return 0 if they don't match */
+		} else {
+			return 0;
+		}
+	/* If fread failed to read 4 chars, print to stderr and return 0 */
+	} else {
+		fprintf(stderr, "Error: check_magic failed to retireve 4 bytes from file\n");
+		return 0;
+	}
 }
 
 
