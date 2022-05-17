@@ -131,6 +131,12 @@ char *filename_rm_ext(const char *filename)
 int check_ext(const char *filename)
 {
 	/* Your code goes here! */
+	int i;
+	for (i=0; filename[i] != '\0'; i++);
+	if (!strcmp(&filename[i-4], ".rle"))
+		return 1;
+	else
+		return 0;
 }
 
 
