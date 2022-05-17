@@ -88,6 +88,11 @@ char *filename_add_ext(const char *filename, const char *ext)
 	len = strlen(filename) + strlen(ext);
 	/* Malloc a char ptr long enough for both strings and a null char */
 	dst = malloc(len+1)
+	/* Check for error in malloc call */
+	if (!dst) {
+		fprintf(stderr, "Error: filename_add_ext failed to malloc\n");
+		return dst;
+	}
 	/* Copy the flename to the destination string */
 	strcpy(dst, filename);
 	/* Concatenate the extension to the destination string */
@@ -115,6 +120,11 @@ char *filename_rm_ext(const char *filename)
 	for (index=len; filename[index] != '.'; index--); /* Makes index var the index of last period in filename */
 	/* Malloc space up to last period of filename */
 	dst = malloc(index);
+	/* Check for error in malloc call */
+	if (!dst) {
+		fprintf(stderr, "Error: filename_rm_ext failed to malloc\n");
+		return dst;
+	}
 	/* Copy the characters from the filename excluding the extension (index # of chars) */
 	strncpy(dst, filename, index);
 	/* Return memory address of filename without ext on HEAP */
