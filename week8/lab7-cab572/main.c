@@ -28,15 +28,24 @@ int main()
 	line = 1;
 	count = 0;
 	/* Get each character of the file until reaching EOF */
-	while ( (c = fgetc(fp_l)) != EOF ) {
+	while (1) {
+		c = fgetc(fp_l);
+		if (c == EOF) {	
+			printf("%d: %d\n", line, count);
+			/* Write the final  line and char data to count.txt */
+			fprintf(fp_o, "%d: %d\n", line, count);
+			/* Break out of for loop */
+			break;
+		} else if (c == '\n') {
 		/* If the character pulled is a newline */
-		if (c == '\n') {
 			printf("%d: %d\n", line, count);
 			/* Write the current line and char data to count.txt */
 			fprintf(fp_o, "%d: %d\n", line, count);
 			/* Increment line number and reset character count */
 			line++;
 			count = 0;
+			fflush(fp_o);
+			fflush(stdout);
 		} else if (c != '\r') {
 			/* Increment character count if char is anything other than newline */
 			count++;
