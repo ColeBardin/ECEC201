@@ -29,25 +29,27 @@ int main()
 	count = 0;
 	/* Get each character of the file until reaching EOF */
 	while (1) {
+		/* Get next char at file position */
 		c = fgetc(fp_l);
+		/* On EOF */
 		if (c == EOF) {	
 			printf("%d: %d\n", line, count);
 			/* Write the final  line and char data to count.txt */
 			fprintf(fp_o, "%d: %d\n", line, count);
 			/* Break out of for loop */
 			break;
-		} else if (c == '\n') {
+		} 
 		/* If the character pulled is a newline */
+		else if (c == '\n') {
 			printf("%d: %d\n", line, count);
 			/* Write the current line and char data to count.txt */
 			fprintf(fp_o, "%d: %d\n", line, count);
 			/* Increment line number and reset character count */
 			line++;
 			count = 0;
-			fflush(fp_o);
-			fflush(stdout);
-		} else if (c != '\r') {
-			/* Increment character count if char is anything other than newline */
+		} 
+		/* Increment character count if char is anything other than newline */
+		else if (c != '\r') {
 			count++;
 		}
 	}
@@ -55,5 +57,6 @@ int main()
 	/* After parsing entire lorum.txt file, close both file pointers */
 	fclose(fp_o);
 	fclose(fp_l);
+
 	return 0;
 }
