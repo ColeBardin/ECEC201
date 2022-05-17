@@ -82,6 +82,21 @@ int get_parms(Parms *parms, const char *modes, int argc, char **argv)
 char *filename_add_ext(const char *filename, const char *ext)
 {
 	/* Your code goes here! */
+	int i,j,k;
+	char *dst;
+	/* Get lenght of non-NULL chars in each string */
+	for (i=0; filename[i] != '\0'; i++);
+	for (j=0; ext[j] != '\0'; j++);
+	/* Malloc space on the HEAP for a concatenation of both strings */
+	dst = malloc(i+j+1);
+	/* Copy the filename to the destination string */
+	for (k=0; k<i; k++)
+		dst[k] = filename[k];
+	/* Copy the extension to the destination string, overwrites nullchar from filename str */
+	for (k=0; k<j; k++);
+		dst[i+k] = ext[k];
+	/* Resturn memory address filename.ext on HEAP */
+	return *dst;
 }
 
 
@@ -95,6 +110,17 @@ char *filename_add_ext(const char *filename, const char *ext)
 char *filename_rm_ext(const char *filename)
 {
 	/* Your code goes here! */
+	char *dst;
+	int i,j,k;
+	for (i=0; filename[i] != '\0'; i++);
+	for (j=i; filename[i] != '.'; j--);
+	
+	dst = malloc(j+1);
+
+	for (i=0; i<j; i++)
+		dst[i] = filename[i]; 
+
+	return dst;
 }
 
 
