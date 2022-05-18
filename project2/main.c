@@ -223,9 +223,20 @@ void compress(const char *filename)
 	/* Write the rle magic bytes to the output file */
 	fwrite(magic, sizeof(*magic), 4, rle_fp);
 
+	/* Malloc a block on HEAP for char variable */
 	c = malloc(sizeof(*c));
+	/* Handle if malloc fails, exit function */
+	if (!c) {
+		fprintf(stderr, "Error: compress() could not allocate memory for c variable\n");
+		return;
+	}
+	/* Malloc a block on HEAP for next char variable */
 	c_next = malloc(sizeof(*c_next));
-	/* TODO: error handle malloc and ret */
+	/* Handle if malloc fails, exit function */
+	if (!c_next) {
+		fprintf(stderr, "Error: compress() could not allocate memory for c_next variable\n");
+		return;
+	}
 
 	/* Get the first char of the input file */
 	ret = fread(c, sizeof(*c), 1, input_fp);
