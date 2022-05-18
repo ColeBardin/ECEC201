@@ -199,11 +199,12 @@ void compress(const char *filename)
 	/* Your code goes here! */
 	FILE *rle_fp;
 	FILE *input_fp;
-	int c;
-	int c_next;
-	unsigned int count = 1;
+	unsigned char *c;
+	unsigned char *c_next;
+	unsigned char count = 1;
 	char *rle_fn = filename_add_ext(filename, ".rle");
 	char magic[] = "!RLE";
+	int ret;
 
 	/* Open the input file with filepointer input_fp */
 	input_fp = fopen(filename, "rb");
@@ -222,37 +223,51 @@ void compress(const char *filename)
 	/* Write the rle magic bytes to the output file */
 	fwrite(magic, sizeof(*magic), 4, rle_fp);
 
-	/* TODO: use fwrite and fread */
+	c = malloc(sizeof(*c));
+	c_next = malloc(sizeof(*c_next));
+	/* TODO: error handle malloc and ret */
+
 	/* Get the first char of the input file */
-	c = fgetc(input_fp);
+	ret = fread(c, sizeof(*c), 1, input_fp);
 	/* Repeat until hitting input file EOF */
-	while ( c != EOF ) {
+	while ( 1 ) {
 		/* Get the next char in input file */
-		c_next = fgetc(input_fp);
+		ret = fread(c_next, sizeof(*c_next), 1, input_fp);
+		if (!ret) {
+			ret = fwrite(&count, sizeof(count), 1, rle_fp);
+			ret = fwrite(c, sizeof(*c), 1, rle_fp);
+			break;
+		}
 		/* If current char is equal to the next char */
-		if (c == c_next) {
-			/* Test if count will overflow one byte */
-			if ( count == 255 ) {
-				/* If so, flush count and char to output file */
-				fprintf(rle_fp, "%c%c", count, c);
-				/* Reset count to 1 */
+		if (*c == *c_next) {
+			if (count == 255) {
+				ret = fwrite(&count, sizeof(count), 1, rle_fp);
+				if (!ret) 
+					break;
+				ret = fwrite(c, sizeof(*c), 1, rle_fp);
+				if (!ret) 
+					break;
 				count = 1;
 			}
-			/* If count will not overflow, increment count */
 			else {
 				count++;
 			}
 		}
-		/* If next character is different */ 
 		else {
-			/* Flush count and char to output file */
-			fprintf(rle_fp, "%c%c", count, c);
-			/* Set current char to next one */
-			c = c_next;
+			/* If so, flush count and char to output file */
+			ret = fwrite(&count, sizeof(count), 1, rle_fp);
+			if (!ret)
+				break;
+			ret = fwrite(c, sizeof(*c), 1, rle_fp);
+			if (!ret)
+				break;
 			/* Reset count to 1 */
-			count = 1;	
+			count = 1;
+			*c = *c_next;
 		}
 	}
+	free(c);
+	free(c_next);
 	/* Close input and output file */
 	fclose(rle_fp);
 	fclose(input_fp);
@@ -279,8 +294,8 @@ void expand(const char *filename)
 	/* Your code goes here! */
 	FILE *rle_fp;
 	FILE *out_fp;
-	char *count;
-	char *c; 
+	unsigned char *count;
+	unsigned char *c; 
 	int i, ret;
 	/* Create filename without extension */	
 	char *fn = filename_rm_ext(filename);
@@ -314,7 +329,6 @@ void expand(const char *filename)
 		return;
 	}
 
-	printf("read first 4 chars\n");	
 	while ( 1 ) {
 		/* Read count from file */
 		ret = fread(count, sizeof(*count), 1, rle_fp);
