@@ -204,7 +204,7 @@ void compress(const char *filename)
 	unsigned char count = 1;
 	char *rle_fn = filename_add_ext(filename, ".rle");
 	char magic[] = "!RLE";
-	int ret;
+	int ret, ret2;
 
 	/* Open the input file with filepointer input_fp */
 	input_fp = fopen(filename, "rb");
@@ -243,8 +243,8 @@ void compress(const char *filename)
 	/* Repeat until hitting input file EOF */
 	while ( 1 ) {
 		/* Get the next char in input file */
-		ret = fread(c_next, sizeof(*c_next), 1, input_fp);
-		if (!ret) {
+		ret2 = fread(c_next, sizeof(*c_next), 1, input_fp);
+		if ( (!ret2) || (*c != *c_next) || (count == 255 )) {
 			/* Write last count byte to file */
 			ret = fwrite(&count, sizeof(count), 1, rle_fp);
 			/* Error handle fwrite failing */
@@ -259,29 +259,21 @@ void compress(const char *filename)
 				fprintf(stderr, "Error: compress() failed to write character byte to %s\n", rle_fn);
 				break;
 			}
-			break;
-		}
-		if ( (*c != *c_next) || (count == 255 )) {
-			/* Write last count byte to file */
-			ret = fwrite(&count, sizeof(count), 1, rle_fp);
-			/* Error handle fwrite failing */
-			if (!ret) {
-				fprintf(stderr, "Error: compress() failed to write count byte to %s\n", rle_fn);
+			/* If it is the case were fread returned EOF */
+			if(!ret2) {
+				/* Exit loop */
 				break;
 			}
-			/* Write last char to file */
-			ret = fwrite(c, sizeof(*c), 1, rle_fp);
-			/* Error handle fwrite failing */
-			if (!ret) {
-				fprintf(stderr, "Error: compress() failed to write character byte to %s\n", rle_fn);
-				break;
-			}
+			/* Else, reset count and assign set current char */
 			count = 1;	
 			*c = *c_next;
+		/* If ret2 is not EOF, current char = next char and count will not overflow */
 		} else {
+			/* Increment count */
 			count++;
 		}
 	}
+	/* Free memory on HEAP used for char variables */
 	free(c);
 	free(c_next);
 	/* Close input and output file */
