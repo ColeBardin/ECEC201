@@ -219,7 +219,7 @@ void compress(const char *filename)
 		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
 		return;	
 	}
-
+	/* TODO: use fwrite */
 	/* Write the rle magic bytes to the output file */
 	fwrite(magic, sizeof(*magic), 4, rle_fp);
 
