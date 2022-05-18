@@ -353,7 +353,12 @@ void expand(const char *filename)
 		/* Use fwite() */
 		/* Write the char to the file count times */
 		for (i=0; i<*count; i++) {
-			fprintf(out_fp, "%c", *c);
+			ret = fwrite(c, sizeof(*c), 1, out_fp);
+			/* Exit program if fwrite() fails */
+			if (!ret) {
+				fprintf(stderr, "Error: expand() failed to write bytes to %s\n", fn);
+				return;
+			}
 		}
 	}
 	/* Free memory on HEAP for allocated for char and count variables */
