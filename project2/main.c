@@ -112,8 +112,8 @@ char *filename_add_ext(const char *filename, const char *ext)
 char *filename_rm_ext(const char *filename)
 {
 	/* Your code goes here! */
-	char *dst;
 	int len, index;
+	char *dst;
 	/* Count total length of filename string */
 	len = strlen(filename);
 	/* Count backwards from end of filename until hitting a period */
@@ -197,13 +197,11 @@ int check_magic(FILE *fp)
 void compress(const char *filename)
 {
 	/* Your code goes here! */
-	FILE *rle_fp;
-	FILE *input_fp;
-	unsigned char *c;
-	unsigned char *c_next;
+	FILE *rle_fp, *input_fp;
+	unsigned char *c, *c_next;
 	unsigned char count = 1;
-	char *rle_fn = filename_add_ext(filename, ".rle");
-	char magic[] = "!RLE";
+	unsigned char *rle_fn = filename_add_ext(filename, ".rle");
+	unsigned char magic[] = "!RLE";
 	int ret, ret2;
 
 	/* Open the input file with filepointer input_fp */
@@ -259,12 +257,12 @@ void compress(const char *filename)
 				fprintf(stderr, "Error: compress() failed to write character byte to %s\n", rle_fn);
 				break;
 			}
-			/* If it is the case were fread returned EOF */
+			/* If it is the case were fread() returned EOF */
 			if(!ret2) {
 				/* Exit loop */
 				break;
 			}
-			/* Else, reset count and assign set current char */
+			/* Else, reset count and set current char */
 			count = 1;	
 			*c = *c_next;
 		/* If ret2 is not EOF, current char = next char and count will not overflow */
@@ -300,13 +298,11 @@ void compress(const char *filename)
 void expand(const char *filename)
 {
 	/* Your code goes here! */
-	FILE *rle_fp;
-	FILE *out_fp;
-	unsigned char *count;
-	unsigned char *c; 
+	FILE *rle_fp, *out_fp;
+	unsigned char *count, *c, *fn;
 	int i, ret;
 	/* Create filename without extension */	
-	char *fn = filename_rm_ext(filename);
+	fn = filename_rm_ext(filename);
 	
 	/* Malloc blocks on HEAP for fread() */
 	c = malloc(sizeof(*c));
