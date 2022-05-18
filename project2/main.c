@@ -271,6 +271,8 @@ void compress(const char *filename)
 			count++;
 		}
 	}
+	/* Free memory on HEAP creaded by filename_add_ext() */
+	free(rle_fn);
 	/* Free memory on HEAP used for char variables */
 	free(c);
 	free(c_next);
@@ -357,6 +359,8 @@ void expand(const char *filename)
 			}
 		}
 	}
+	/* Free memory on HEAP allocated by filename_rm_ext() */
+	free(fn);
 	/* Free memory on HEAP for allocated for char and count variables */
 	free(c);
 	free(count);
