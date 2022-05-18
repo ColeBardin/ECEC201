@@ -244,9 +244,23 @@ void compress(const char *filename)
 	while ( 1 ) {
 		/* Get the next char in input file */
 		ret = fread(c_next, sizeof(*c_next), 1, input_fp);
+		/* If next read call fails (EOF) */
 		if (!ret) {
+			/* Write last count byte to file */
 			ret = fwrite(&count, sizeof(count), 1, rle_fp);
+			/* Error handle fwrite failing */
+			if (!ret) {
+				fprintf(stderr, "Error: compress() failed to write last count byte to %s\n", rle_fn);
+				break;
+			}
+			/* Write last char to file */
 			ret = fwrite(c, sizeof(*c), 1, rle_fp);
+			/* Error handle fwrite failing */
+			if (!ret) {
+				fprintf(stderr, "Error: compress() failed to write last character byte to %s\n", rle_fn);
+				break;
+			}
+			/* Exit loop */
 			break;
 		}
 		/* If current char is equal to the next char */
