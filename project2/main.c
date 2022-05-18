@@ -282,57 +282,61 @@ void expand(const char *filename)
 	char *count;
 	char *c; 
 	int i, ret;
-	
+	/* Create filename without extension */	
 	char *fn = filename_rm_ext(filename);
 	
+	/* Malloc blocks on HEAP for fread() */
 	c = malloc(sizeof(*c));
 	count = malloc(sizeof(*count));
 
+	/* Check if the provided filename the correct extension */
 	if (!check_ext(filename)) {
 		fprintf(stderr, "Error: expand() recieved a file with invalid expansion\n");
 		return;
 	}
-
+	/* Try to open rle file */
 	rle_fp = fopen(filename, "rb");
+	/* Handle rle file not opening properly */
 	if (!rle_fp) {
 		fprintf(stderr, "Error: expand() could not open .rle file\n");
 		return;
 	}
-
+	/* Try to create output file */
 	out_fp = fopen(fn, "wb");
+	/* Handle output file not opening properly */
 	if (!out_fp) {
 		fprintf(stderr, "Error: expand() could not create output file\n");
 		return;
 	}
-
+	/* Check to make sure file has proper magic bytes */
 	if (!check_magic(rle_fp)) {
 		fprintf(stderr, "Error: expand() recieved a file without !RLE magic bytes\n");
 		return;
 	}
-	printf("check  magic pas\n");	
-	
-	ret = fread(count, sizeof(*count), 1, rle_fp);
-	if ( ret != 1 ) {
-		fprintf(stderr, "Error: expand() failed to read from input file\n");
-		return;
-	}
-	ret = fread(c, sizeof(*c), 1, rle_fp);
-	if (ret != 1) {
-		fprintf(stderr, "Error: expand() failed to read from input file\n");
-		return;
-	}
 
 	printf("read first 4 chars\n");	
-	while ( ret != 0 ) {
-		printf("%d\n",ret);
+	while ( 1 ) {
+		/* Read count from file */
+		ret = fread(count, sizeof(*count), 1, rle_fp);
+		/* If read is not successful (EOF), break loop */
+		if ( ret != 1 ) {
+			break;
+		}
+		/* Read char from file */
+		ret = fread(c, sizeof(*c), 1, rle_fp);
+		/* If read is not successful (EOF), break loop */
+		if (ret != 1) {
+			break;
+		}
+		/* Write the char to the file count times */
 		for (i=0; i<*count; i++) {
 			fprintf(out_fp, "%c", *c);
 		}
-		ret = fread(count, sizeof(*count), 1, rle_fp);
-		ret = fread(c, sizeof(*c), 1, rle_fp);
-	}	
+	}
+	/* Free memory on HEAP for allocated for char and count variables */
 	free(c);
 	free(count);
+	/* Close both files */
 	fclose(rle_fp);
 	fclose(out_fp);
 	return;
