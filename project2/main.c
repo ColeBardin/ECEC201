@@ -204,29 +204,24 @@ void compress(const char *filename)
 	unsigned int count = 1;
 	char *rle_fn = filename_add_ext(filename, ".rle");
 	char magic[] = "!RLE";
-	int i;
 
 	/* Open the input file with filepointer input_fp */
 	input_fp = fopen(filename, "rb");
 	/* Make sure filepointer is not NULL */
 	if (!input_fp) {
-		fprintf(stderr, "Error: Count not open %s in \"rb\" mode\n", filename);
+		fprintf(stderr, "Error: compress() count not open %s in \"rb\" mode\n", filename);
 		return;
 	}
 	/* Open the output file with filepointer rle_fp */
 	rle_fp = fopen(rle_fn, "wb");
 	/* Make sure filepointer is not NULL */
 	if (!rle_fp) {
-		fprintf(stderr, "Error: Could not create %s in \"wb\" mode\n", rle_fn);
+		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
 		return;	
 	}
 
-	/* TODO: refactor */
-	for (i=0; i<4; i++) {
-		fprintf(rle_fp, "%02x", magic[i]);
-		if (i%2)
-			fprintf(rle_fp, " ");
-	}	
+	/* Write the rle magic bytes to the output file */
+	fwrite(magic, sizeof(*magic), 4, rle_fp);
 
 	/* Get the first char of the input file */
 	c = fgetc(input_fp);
@@ -239,7 +234,7 @@ void compress(const char *filename)
 			/* Test if count will overflow one byte */
 			if ( count == 255 ) {
 				/* If so, flush count and char to output file */
-				fprintf(rle_fp, "%02x%02x ", count, c);
+				fprintf(rle_fp, "%c%c", count, c);
 				/* Reset count to 1 */
 				count = 1;
 			}
@@ -251,7 +246,7 @@ void compress(const char *filename)
 		/* If next character is different */ 
 		else {
 			/* Flush count and char to output file */
-			fprintf(rle_fp, "%02x%02x ", count, c);
+			fprintf(rle_fp, "%c%c", count, c);
 			/* Set current char to next one */
 			c = c_next;
 			/* Reset count to 1 */
@@ -282,6 +277,54 @@ void compress(const char *filename)
 void expand(const char *filename)
 {
 	/* Your code goes here! */
+	FILE *rle_fp;
+	FILE *out_fp;
+	int count, c, i;
+	
+	char fn[] = filename_rm_ext(filename);
+	
+	if (!check_ext(filename)) {
+		fprintf(stderr, "Error: expand() recieved a file with invalid expansion\n");
+		return;
+	}
+	if (!check_magic(rle_fp)) {
+		fprintf(stderr, "Error: expand() recieved a file without !RLE magic bytes\n");
+		return;
+	}
+
+	rle_fp = fopen(filename, "rb");
+	if (!rle_fp) {
+		fprintf(stderr, "Error: expand() could not open .rle file\n");
+		return;
+	}
+
+	out_fp = fopen(fn, "wb");
+	if (!out_fp) {
+		fprintf(stderr, "Error: expand() could not create output file\n");
+		return;
+	}
+	
+
+	while ( c != EOF ) {
+		ret = fread(count, sizeof(count), 1, rle_fp);
+		if ( ret != 1 ) {
+			fprintf(stderr, "Error: expand() failed to read from input file\n");
+			return;
+		}
+		ret = fread(c, sizeof(c), 1, rle_fp) {
+			fprintf(stderr, "Error: expand() failed to read from input file\n");
+			return;
+		}
+	
+		for (i=0; i<count; i++) {
+			fwrite(c, sizeof(c), 1, rle_fp);
+		}
+	}	
+	
+
+	fclose(rle_fp);
+	fclose(out_fp);
+	return;
 }
 
 
