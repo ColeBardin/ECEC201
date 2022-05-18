@@ -87,7 +87,7 @@ char *filename_add_ext(const char *filename, const char *ext)
 	/* Get the length of both strings */
 	len = strlen(filename) + strlen(ext);
 	/* Malloc a char ptr long enough for both strings and a null char */
-	dst = malloc(len+1)
+	dst = malloc(len+1);
 	/* Check for error in malloc call */
 	if (!dst) {
 		fprintf(stderr, "Error: filename_add_ext failed to malloc\n");
@@ -197,6 +197,71 @@ int check_magic(FILE *fp)
 void compress(const char *filename)
 {
 	/* Your code goes here! */
+	FILE *rle_fp;
+	FILE *input_fp;
+	int c;
+	int c_next;
+	unsigned int count = 1;
+	char *rle_fn = filename_add_ext(filename, ".rle");
+	char magic[] = "!RLE";
+	int i;
+
+	/* Open the input file with filepointer input_fp */
+	input_fp = fopen(filename, "rb");
+	/* Make sure filepointer is not NULL */
+	if (!input_fp) {
+		fprintf(stderr, "Error: Count not open %s in \"rb\" mode\n", filename);
+		return;
+	}
+	/* Open the output file with filepointer rle_fp */
+	rle_fp = fopen(rle_fn, "wb");
+	/* Make sure filepointer is not NULL */
+	if (!rle_fp) {
+		fprintf(stderr, "Error: Could not create %s in \"wb\" mode\n", rle_fn);
+		return;	
+	}
+
+	/* TODO: refactor */
+	for (i=0; i<4; i++) {
+		fprintf(rle_fp, "%02x", magic[i]);
+		if (i%2)
+			fprintf(rle_fp, " ");
+	}	
+
+	/* Get the first char of the input file */
+	c = fgetc(input_fp);
+	/* Repeat until hitting input file EOF */
+	while ( c != EOF ) {
+		/* Get the next char in input file */
+		c_next = fgetc(input_fp);
+		/* If current char is equal to the next char */
+		if (c == c_next) {
+			/* Test if count will overflow one byte */
+			if ( count == 255 ) {
+				/* If so, flush count and char to output file */
+				fprintf(rle_fp, "%02x%02x ", count, c);
+				/* Reset count to 1 */
+				count = 1;
+			}
+			/* If count will not overflow, increment count */
+			else {
+				count++;
+			}
+		}
+		/* If next character is different */ 
+		else {
+			/* Flush count and char to output file */
+			fprintf(rle_fp, "%02x%02x ", count, c);
+			/* Set current char to next one */
+			c = c_next;
+			/* Reset count to 1 */
+			count = 1;	
+		}
+	}
+	/* Close input and output file */
+	fclose(rle_fp);
+	fclose(input_fp);
+	return;
 }
 
 
