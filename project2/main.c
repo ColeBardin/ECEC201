@@ -324,9 +324,10 @@ void expand(const char *filename)
 
 	printf("read first 4 chars\n");	
 	while ( ret != 0 ) {
-		printf("%d\n",*count);
-		fprintf(out_fp, "%c", *c);
-
+		printf("%d\n",ret);
+		for (i=0; i<*count; i++) {
+			fprintf(out_fp, "%c", *c);
+		}
 		ret = fread(count, sizeof(*count), 1, rle_fp);
 		ret = fread(c, sizeof(*c), 1, rle_fp);
 	}	
