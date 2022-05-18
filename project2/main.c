@@ -200,7 +200,7 @@ void compress(const char *filename)
 	FILE *rle_fp, *input_fp;
 	unsigned char *c, *c_next;
 	unsigned char count = 1;
-	unsigned char *rle_fn = filename_add_ext(filename, ".rle");
+	char *rle_fn = filename_add_ext(filename, ".rle");
 	unsigned char magic[] = "!RLE";
 	int ret, ret2;
 
@@ -299,10 +299,10 @@ void expand(const char *filename)
 {
 	/* Your code goes here! */
 	FILE *rle_fp, *out_fp;
-	unsigned char *count, *c, *fn;
+	unsigned char *count, *c;
 	int i, ret;
 	/* Create filename without extension */	
-	fn = filename_rm_ext(filename);
+	char *fn = filename_rm_ext(filename);
 	
 	/* Malloc blocks on HEAP for fread() */
 	c = malloc(sizeof(*c));
@@ -398,8 +398,8 @@ void debug(const char *filename)
 	for (i=0; i<nbytes; i++)
 		printf("%c", isprint(b[i]) ? b[i] : '.');
 
-		printf("\n");
-		offset += 16;
+	printf("\n");
+	offset += 16;
 	}
 
 	fclose(fp);
