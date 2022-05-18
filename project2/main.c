@@ -219,10 +219,10 @@ void compress(const char *filename)
 		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
 		return;	
 	}
-	/* TODO: use fwrite */
 	/* Write the rle magic bytes to the output file */
 	fwrite(magic, sizeof(*magic), 4, rle_fp);
 
+	/* TODO: use fwrite and fread */
 	/* Get the first char of the input file */
 	c = fgetc(input_fp);
 	/* Repeat until hitting input file EOF */
@@ -328,6 +328,7 @@ void expand(const char *filename)
 		if (ret != 1) {
 			break;
 		}
+		/* Use fwite() */
 		/* Write the char to the file count times */
 		for (i=0; i<*count; i++) {
 			fprintf(out_fp, "%c", *c);
