@@ -279,16 +279,17 @@ void expand(const char *filename)
 	/* Your code goes here! */
 	FILE *rle_fp;
 	FILE *out_fp;
-	int count, c, i;
+	char *count;
+	char *c; 
+	int i, ret;
 	
-	char fn[] = filename_rm_ext(filename);
+	char *fn = filename_rm_ext(filename);
 	
+	c = malloc(sizeof(*c));
+	count = malloc(sizeof(*count));
+
 	if (!check_ext(filename)) {
 		fprintf(stderr, "Error: expand() recieved a file with invalid expansion\n");
-		return;
-	}
-	if (!check_magic(rle_fp)) {
-		fprintf(stderr, "Error: expand() recieved a file without !RLE magic bytes\n");
 		return;
 	}
 
@@ -303,25 +304,34 @@ void expand(const char *filename)
 		fprintf(stderr, "Error: expand() could not create output file\n");
 		return;
 	}
-	
 
-	while ( c != EOF ) {
-		ret = fread(count, sizeof(count), 1, rle_fp);
-		if ( ret != 1 ) {
-			fprintf(stderr, "Error: expand() failed to read from input file\n");
-			return;
-		}
-		ret = fread(c, sizeof(c), 1, rle_fp) {
-			fprintf(stderr, "Error: expand() failed to read from input file\n");
-			return;
-		}
+	if (!check_magic(rle_fp)) {
+		fprintf(stderr, "Error: expand() recieved a file without !RLE magic bytes\n");
+		return;
+	}
+	printf("check  magic pas\n");	
 	
-		for (i=0; i<count; i++) {
-			fwrite(c, sizeof(c), 1, rle_fp);
-		}
+	ret = fread(count, sizeof(*count), 1, rle_fp);
+	if ( ret != 1 ) {
+		fprintf(stderr, "Error: expand() failed to read from input file\n");
+		return;
+	}
+	ret = fread(c, sizeof(*c), 1, rle_fp);
+	if (ret != 1) {
+		fprintf(stderr, "Error: expand() failed to read from input file\n");
+		return;
+	}
+
+	printf("read first 4 chars\n");	
+	while ( ret != 0 ) {
+		printf("%d\n",*count);
+		fprintf(out_fp, "%c", *c);
+
+		ret = fread(count, sizeof(*count), 1, rle_fp);
+		ret = fread(c, sizeof(*c), 1, rle_fp);
 	}	
-	
-
+	free(c);
+	free(count);
 	fclose(rle_fp);
 	fclose(out_fp);
 	return;
