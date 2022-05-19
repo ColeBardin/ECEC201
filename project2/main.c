@@ -162,8 +162,12 @@ int check_magic(FILE *fp)
 	int ret;
 	/* Attempt to read 4 bytes from filepointer */
 	ret = fread(dst, sizeof(*dst), 4, fp);
-	if (ret == 4) {
-		/* If 4 bytes were read, compare them to magic byte sequence */
+	/* If fread failed to read 4 chars, print to stderr and return 0 */
+	if (ret != 4) {
+		fprintf(stderr, "Error: check_magic failed to retireve 4 bytes from file\n");
+		return 0;
+	} else {
+		/* If 4 bytes are read from file, compare them to magic byte sequence */
 		if(!strcmp(dst, rle)) {
 			/* Return 1 if they  match */
 			return 1;
@@ -171,13 +175,8 @@ int check_magic(FILE *fp)
 		} else {
 			return 0;
 		}
-	/* If fread failed to read 4 chars, print to stderr and return 0 */
-	} else {
-		fprintf(stderr, "Error: check_magic failed to retireve 4 bytes from file\n");
-		return 0;
 	}
 }
-
 
 
 /** M O D E S **********************************************************/
