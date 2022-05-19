@@ -323,26 +323,26 @@ void expand(const char *filename)
 
 	/* Check if the provided filename the correct extension */
 	if (!check_ext(filename)) {
-		fprintf(stderr, "Error: expand() recieved a file with invalid expansion\n");
+		fprintf(stderr, "Error: expand() recieved a file not of .rle type: %s\n", filename);
 		return;
 	}
 	/* Try to open rle file */
 	rle_fp = fopen(filename, "rb");
 	/* Handle rle file not opening properly */
 	if (!rle_fp) {
-		fprintf(stderr, "Error: expand() could not open .rle file\n");
+		fprintf(stderr, "Error: expand() could not open .rle file: %s\n", filename);
 		return;
 	}
 	/* Try to create output file */
 	out_fp = fopen(fn, "wb");
 	/* Handle output file not opening properly */
 	if (!out_fp) {
-		fprintf(stderr, "Error: expand() could not create output file\n");
+		fprintf(stderr, "Error: expand() could not create output file: %s\n", fn);
 		return;
 	}
 	/* Check to make sure file has proper magic bytes */
 	if (!check_magic(rle_fp)) {
-		fprintf(stderr, "Error: expand() recieved a file without !RLE magic bytes\n");
+		fprintf(stderr, "Error: expand() recieved file %s without !RLE magic bytes\n", filename);
 		return;
 	}
 
