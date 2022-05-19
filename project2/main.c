@@ -112,13 +112,12 @@ char *filename_add_ext(const char *filename, const char *ext)
 char *filename_rm_ext(const char *filename)
 {
 	/* Your code goes here! */
-	/* TODO: Decide if handling no ext is needed */
 	int len, index;
 	char *dst;
 	/* Count total length of filename string */
 	len = strlen(filename);
-	/* Count backwards from end of filename until hitting a period. Useful if different length extension is used in compress() */
-	for (index=len; filename[index] != '.'; index--); /* Makes index var the index of last period in filename. No need to error handle since */
+	/* Count backwards from end of filename until hitting a period. Useful if different length extension is used for compressed files */
+	for (index=len; filename[index] != '.'; index--); /* Makes index var the index of last period in filename. No need to error handle since expand() checks for extension before attempting to remove it */
 	/* Malloc space up to last period of filename. More  modular than just strlen(filename)-4 */
 	dst = malloc(index);
 	/* Check for error in malloc call */
