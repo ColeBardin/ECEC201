@@ -348,7 +348,6 @@ void expand(const char *filename)
 		if (ret != 1) {
 			break;
 		}
-		/* Use fwite() */
 		/* Write the char to the file count times */
 		for (i=0; i<*count; i++) {
 			ret = fwrite(c, sizeof(*c), 1, out_fp);
