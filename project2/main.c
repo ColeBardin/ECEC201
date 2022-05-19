@@ -218,8 +218,14 @@ void compress(const char *filename)
 		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
 		return;	
 	}
+
 	/* Write the rle magic bytes to the output file */
-	fwrite(magic, sizeof(*magic), 4, rle_fp);
+	ret = fwrite(magic, sizeof(*magic), 4, rle_fp);
+	/* Handle if fwrite fails to write 4 bytes */
+	if (ret!=4) {
+		fprintf(stderr, "Error: compress() could not write magic bytes to %s\n", rle_fn);
+		return;
+	}
 
 	/* Malloc a block on HEAP for char variable */
 	c = malloc(sizeof(*c));
@@ -238,6 +244,11 @@ void compress(const char *filename)
 
 	/* Get the first char of the input file */
 	ret = fread(c, sizeof(*c), 1, input_fp);
+	/* Error handle fread() */
+	if (!ret) {
+		fprintf(stderr, "Error: compress() failed to read first character from %s\n", filename);
+		return;
+	}
 	/* Repeat until hitting input file EOF */
 	while ( 1 ) {
 		/* Get the next char in input file */
