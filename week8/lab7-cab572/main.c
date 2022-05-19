@@ -32,23 +32,19 @@ int main()
 		/* Get next char at file position */
 		c = fgetc(fp_l);
 		/* On EOF */
-		if (c == EOF) {	
+		if ( (c == EOF) || (c == '\n') ) {	
 			printf("%d: %d\n", line, count);
 			/* Write the final  line and char data to count.txt */
 			fprintf(fp_o, "%d: %d\n", line, count);
 			/* Break out of for loop */
-			break;
+			if (c == EOF)
+				break;
+			else {
+				line++;
+				count = 0;
+			}
 		} 
-		/* If the character pulled is a newline */
-		else if (c == '\n') {
-			printf("%d: %d\n", line, count);
-			/* Write the current line and char data to count.txt */
-			fprintf(fp_o, "%d: %d\n", line, count);
-			/* Increment line number and reset character count */
-			line++;
-			count = 0;
-		} 
-		/* Increment character count if char is anything other than newline */
+		/* Increment character count if char is anything other than retrun carriage */
 		else if (c != '\r') {
 			count++;
 		}
