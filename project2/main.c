@@ -314,8 +314,6 @@ void expand(const char *filename)
 	FILE *rle_fp, *out_fp;
 	unsigned char *count, *c;
 	int i, ret;
-	/* Create filename without extension */	
-	char *fn = filename_rm_ext(filename);
 	
 	/* Malloc blocks on HEAP for fread() */
 	c = malloc(sizeof(*c));
@@ -326,6 +324,8 @@ void expand(const char *filename)
 		fprintf(stderr, "Error: expand() recieved a file not of .rle type: %s\n", filename);
 		return;
 	}
+	/* Create filename without extension */	
+	char *fn = filename_rm_ext(filename);
 	/* Try to open rle file */
 	rle_fp = fopen(filename, "rb");
 	/* Handle rle file not opening properly */
