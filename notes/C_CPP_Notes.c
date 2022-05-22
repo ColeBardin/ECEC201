@@ -663,6 +663,142 @@ int main(){
 
 
 
+
+DOUBLY LINKED LISTS:
+more complex but easier to work with
+
+struct d_list {
+	int val;
+	struct d_list *next;
+	struct d_list *prev;
+};
+
+containes next and previous item in list
+they are circularly linked, no NULL terminator tail
+
+stop circulating when you reach the HEAD again
+can be linear but not very useful, so make them circular
+
+HEAD -> 1 next-> 2 next -> 3 next -> HEAD
+HEAD <- prev 1 <- prev 2 <- prev 2 <- HEAD
+
+HOW TO WORK WITH DOUBLY LINKED LISTS
+#include <stdlib.h>
+struct list {
+	int val;
+	struct list *next;
+	struct list *prev;
+};
+void list_init(struct list *head) {
+	head->next = head;
+	head->prev = head;
+	/* Empty doubly linked lists start with head pointing to intself in both directions 
+	HEAD <- HEAD -> HEAD */
+}
+void add_after(struct list *cur, struct list *new) {
+	/* Part 1: edit new item pointers to link it to list */
+	new->next = cur->next; /* Make new item point to cur's next item */
+	new->prev = cur; /* Make new item point back to cur item */
+	/* Part 2: edit current list items to link it around the new item */
+	cur->next->prev = new; /* Make item after cur points backwards to new item */
+	cur->next = new; /* Make cur point forwards to new item */
+}
+void add_before(struct list *cur, struct list *new) {
+	/* Part 1: edit new item pointers to link it in the list */
+	new->next = cur; /* Point new item to current item */
+	new->prev = cur->prev; /* Make new item point backwards to whatever cur was pointing backwards to */
+	/* Part 2: edit current list items to link it around the new item */
+	cur->prev->next = new; /* Make item behind cur to point forward to new item */
+	cur->prev = new; /* Make cur item point backwards to new item */
+}
+void list_remove(struct list *cur) {
+	cur->prev->next = cur->next; /* Make item behind cur point to item after cur */
+	cur->next->prev = cur->prev; /* Make item after cur point to item behind cur */
+	/* Detach current item internally */
+	cur->next = NULL;
+	cur->prev = NULL;
+}
+int main() {
+	int i;
+	struct list *item, *cur, *next;
+	struct list head = malloc(sizeof(*head)); /* Or it can live on main stack frame with no malloc call */
+	list_init(&head); /* Init empty doubly linked list */	
+	
+	for (i=0; i<2; i++) {
+		item = malloc(sizeof(*item));
+		item->val = i;
+		add_after(head, item); /* Add item after HEAD */
+		/* Current structure: HEAD next -> 2 next-> 1 next-> HEAD and prev going in opposite dir */
+	}
+	/* Iterate through doubly linked lists */
+	for (cur=head->next; cur!=head; cur=cur->next) { /* Iterate until we reach the head again, can be done with prev as well. Leaves cur equal to head */
+		printf("%d\n", cur->val); /* Statements with cur list element */
+		/* Arbitray insertion */
+		if (cur->val == 2) { /* If current item has value of 2 */
+			item = malloc(sizeof(*item));
+			item->val = 37;
+			add_after(cur, item); /* Add a newly allocated item with val of 37 after it */
+			break;
+		}	
+	}
+	/* Add item before */
+	item = malloc(sizeof(*item));
+	item->val = 97;
+	add_before(head, item);
+	/* Current order: HEAD next-> 2 next-> 37 next-> 1 next-> 97 next-> HEAD */
+	/* Removing an item */
+	for (cur=head->next; cur!=head; cur=cur->next) {
+	/* Iterate until cur is the item with val of 37 */
+		if (cur->val == 37)
+			break;
+	}
+	/* Now remove cur */
+	list_remove(cur);
+	/* Free it if you're done with it */
+	free(cur);
+	/* ITEM REMOVAL IN LOOP (BE CAREFUL) there's a reason why we broke out of the loop BEFORE removing the item  */
+	/* If there is no BREAK after finding the correct item, the loop cannot find the next item. cur is INVALID or next/prev are NULL. Gives SEG FAULT */
+	for (cur=head->next, next=cur->next; cur!=head; cur=next, next=cur->next) { /* Edit initializer and iterater options for the loop to save cur next BEFORE removing it */
+		/* After each iteration update NEXT variable to cur->next so when we free(cur), the loop can continue */
+		list_remove(cur);
+		printf("Removed %d\n", cur->val);
+		free(cur);
+	}
+	return 0;
+}	
+
+MACRO for list ITERATION
+/* Macro for SAFE list iteration that saves the next address so items can be removed */
+#define list_safe_for(head, cur, sav)	\
+for (cur=head->next, sav=cur->next;		\
+	cur!=head;							\
+	cur=sav, sav=cur->next)				\
+
+/* Macro for normal loop iteration that doesn't need to be extra safe (NO REMOVING IN LOOP) */
+#define list_for(head, cur) 	\
+for (cur=head->next; cur!=head; cur=cur->next)
+int main() {
+	int i;
+	struct list *item, *cur, *next;
+	struct list *head = malloc(sizeof(*head));
+	list_init(head);
+	/* ADD ARBITRARY ITEMS TO LIST ... */
+	list_for (head, cur) {
+		printf("Val = %d\n", cur->next);
+	}
+	list_safe_for (head, cur, next) {
+		list_remove(cur);
+		printf("Removed %d\n", cur->val);
+		free(cur);
+	}
+	return 0;
+}
+
+
+
+
+
+
 CREATING NEW NAMES FOR EXISTING TYPES
 typedef
 
@@ -682,12 +818,6 @@ int main() {
 	bob.age = 20;
 }
 /* Don't over typedef */
-
-
-
-
-
-Doubly Linked Lists
 
 
 
@@ -721,14 +851,29 @@ size_t offsetof(struct, struct *member) /* receieves type */
 age_offset = offsetof(struct person, age);
 
 offsetof included in:
-#include <stddef>
+#include <stddef.h>
 
 
 CONTAINER_OF Macro
 not included with compiler, must be made by hand
 computes address of struct with just address of members
 
+How CONTAINER_OF() works:
+to avoid issues with pointer arithmetic:
+bob_ptr = (struct person *)((char *)age_ptr - offsetof(struct person, age)); /* Explicit cast to char ptr so +-1 is actually one byte */
+/* Then cast entire difference back to correct struct ptr so it can be stored into correct ptr variable type */
 
+Now in macro form:
+#define container_of(_mptr, type, member) \
+(type *)( (char *)_mptr - offsetof(type, member) )
+
+#include <stddef.h>
+int main() {
+	
+	struct person *bob_ptr;
+	bob_ptr = container_of(age_ptr, struct person, age);
+	return 0;
+}
 
 
 
