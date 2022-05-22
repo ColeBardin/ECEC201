@@ -8,7 +8,6 @@ for (cur=head->next, sav=cur->next;		\
 
 
 struct list {
-	int val; /* Change data type as needed */
 	struct list *next;
 	struct list *prev;
 };
