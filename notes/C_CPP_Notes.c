@@ -687,6 +687,53 @@ int main() {
 
 
 
+Doubly Linked Lists
+
+
+
+
+
+
+#define With parameters
+
+#define count(idx, num) for(idx=0; idx<num; idx++)
+
+int main(){
+	int i;
+	count(i, 10) { /* Places for loop statement here with the parameters */
+		printf("%d\n", i);
+	}
+	return 0;
+}
+
+if you need a mutliline #define, you must escape the newline char with \ :
+#define count(idx, num) \
+	for (idx=0; idx<num; idx++)
+
+
+
+
+
+OFFSETOF Macro:
+comes with compilers
+gets the byte offset of a struct member
+size_t offsetof(struct, struct *member) /* receieves type */
+age_offset = offsetof(struct person, age);
+
+offsetof included in:
+#include <stddef>
+
+
+CONTAINER_OF Macro
+not included with compiler, must be made by hand
+computes address of struct with just address of members
+
+
+
+
+
+
+
 FILE HANDLING:
 on UNIX systems, GUIs need to ask to OS for help to open files
 C STDLIB helps manage interfacing with OS specific file shit
