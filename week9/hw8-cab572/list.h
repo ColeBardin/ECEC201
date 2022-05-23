@@ -28,3 +28,4 @@ void list_add_before(struct list *cur, struct list *new);
 void list_remove(struct list *cur);
 
 #endif  /* _list_h_ */
+

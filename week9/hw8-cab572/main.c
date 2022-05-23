@@ -29,8 +29,8 @@ struct list *load_database(const char *filename)
 	struct person *item;
 	
 	/* Rewrite this function! */
-	char name[128], age[10], sal[15], years[5];
-	int ret;
+	char name[128];
+	int ret, age, sal, years;
 	
 	fp = fopen(filename, "r");
 	if(!fp) {
@@ -46,25 +46,7 @@ struct list *load_database(const char *filename)
 	}
 	list_init(head);
 
-	ret = fscanf(fp, " %s,", name);
-	if (!ret) {
-		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
-		fclose(fp);
-		return NULL;
-	}
-	ret = fscanf(fp, " %s,", age);
-	if (!ret) {
-		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
-		fclose(fp);
-		return NULL;
-	}
-	ret = fscanf(fp, " %s,", sal);
-	if (!ret) {
-		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
-		fclose(fp);
-		return NULL;
-	}
-	ret = fscanf(fp, " %s\n", years);
+	ret = fscanf(fp, "%[^,], %d, %d, %d\n", name, &age, &sal, &years);
 	if (!ret) {
 		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
 		fclose(fp);
@@ -78,26 +60,12 @@ struct list *load_database(const char *filename)
 			fclose(fp);
 			return NULL;
 		}
-		name[strlen(name)-1] = '\0';
 		strcpy(item->name, name);
-		item->age = atoi(age);
-		item->salary = atoi(sal);
-		item->years = atoi(years);
+		item->age = age;
+		item->salary = sal;
+		item->years = years;
 		list_add_after(head, &item->node);	
-
-		ret = fscanf(fp, " %s,", name);
-		if (!ret || ret == EOF) {
-			break;
-		}
-		ret = fscanf(fp, " %s,", age);
-		if (!ret || ret == EOF) {
-			break;
-		}
-		ret = fscanf(fp, " %s,", sal);
-		if (!ret || ret == EOF) {
-			break;
-		}
-		ret = fscanf(fp, " %s\n", years);
+		ret = fscanf(fp, "%[^,], %d, %d, %d \n", name, &age, &sal, &years);
 		if (!ret || ret == EOF) {
 			break;
 		}

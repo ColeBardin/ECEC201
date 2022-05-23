@@ -30,3 +30,4 @@ void list_remove(struct list *cur)
   cur->prev = NULL;
   cur->next = NULL;
 }
+
