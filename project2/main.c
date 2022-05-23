@@ -252,6 +252,7 @@ void compress(const char *filename)
 	while ( 1 ) {
 		/* Get the next char in input file */
 		ret2 = fread(c_next, sizeof(*c_next), 1, input_fp);
+		/* If fread returns 0 or the next char is different or count will overflow */
 		if ( (!ret2) || (*c != *c_next) || (count == 255 )) {
 			/* Write last count byte to file */
 			ret = fwrite(&count, sizeof(count), 1, rle_fp);
@@ -337,11 +338,16 @@ void expand(const char *filename)
 	/* Handle output file not opening properly */
 	if (!out_fp) {
 		fprintf(stderr, "Error: expand() could not create output file: %s\n", fn);
+		/* Close rle file */
+		fclose(rle_fp);
 		return;
 	}
 	/* Check to make sure file has proper magic bytes */
 	if (!check_magic(rle_fp)) {
 		fprintf(stderr, "Error: expand() recieved file %s without !RLE magic bytes\n", filename);
+		/* Close files before returning */
+		fclose(rle_fp);
+		fclose(out_fp);
 		return;
 	}
 
@@ -364,6 +370,9 @@ void expand(const char *filename)
 			/* Exit program if fwrite() fails */
 			if (!ret) {
 				fprintf(stderr, "Error: expand() failed to write bytes to %s\n", fn);
+				/* Close files before returning */
+				fclose(rle_fp);
+				fclose(out_fp);
 				return;
 			}
 		}
