@@ -1,7 +1,11 @@
 #include <stddef.h>
 
+#ifndef container_of 
+
 #define container_of(_mptr, type, member)	\
 (type *)( (char *)_mptr - offsetof(type, member) )
+
+#endif
 
 #define list_for(head, cur)		\
 for (cur=head->next; cur!=head; cur=cur->next)
