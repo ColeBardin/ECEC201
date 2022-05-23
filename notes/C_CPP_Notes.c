@@ -796,7 +796,7 @@ int main() {
 
 
 
-USING LIST_API
+USING LIST_API for GENERIC LISTS (GENERIC DOUBLY LINKED LISTS)
 #include "list.h"
 there's no specified value for each list element. therefore in each program it should be specified:
 
@@ -805,6 +805,9 @@ main.c:
 #include <stdio.h>
 #include "list.h"
 
+#define to_ints(ptr)	\
+	container_of(ptr, struct ints, node)
+
 struct ints {
 	int val; /* Add custom datatype value variable */
 	struct list node; /* Embed of type struct list from list.h */
@@ -812,7 +815,7 @@ struct ints {
 int main(int argc, char **argv) {
 	int i;
 	struct ints *item;
-	struct list *head, *cur;
+	struct list *head, *cur, *sav;
 
 	head = malloc(sizeof(*head));
 	list_init(head);
@@ -824,13 +827,23 @@ int main(int argc, char **argv) {
 	}
 	list_for (head, cur) {
 		/* now here comes the cool stuff */
-		item = container_of(cur, struct ints, node); /* SEE CONTAINER_OF NOTES */
+		item = to_ints(cur); /* Can be hand written with container_of call but its good to macro it if used a lot */
 		printf("%d\n", item->val);
 	}
+	list_safe_for (head, cur, sav) {
+		item = to_ints(cur);
+		printf("%d\n", item->val);
+		list_remove(&item->node); /* REMOVE NODE */
+		free(item); /* FREE ITEM */
+	}
+	free(head);
 	return 0;
 }
 
 
+Generic doubly linked lists can contain:
+multiple members of any data type
+multiple nodes to different lists!! very powerful
 
 
 
