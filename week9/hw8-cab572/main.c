@@ -46,13 +46,11 @@ struct list *load_database(const char *filename)
 	}
 	list_init(head);
 
-	ret = fscanf(fp, "%[^,], %d, %d, %d\n", name, &age, &sal, &years);
-	if (!ret) {
-		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
-		fclose(fp);
-		return NULL;
-	}
-	while (ret && ret!=EOF) {
+	while ( 1 ) {
+		ret = fscanf(fp, "%[^,], %d, %d, %d\n", name, &age, &sal, &years);
+		if (!ret || ret == EOF) {
+			break;
+		}
 
 		item = malloc(sizeof(*item));
 		if(!item) {
@@ -65,11 +63,8 @@ struct list *load_database(const char *filename)
 		item->salary = sal;
 		item->years = years;
 		list_add_after(head, &item->node);	
-		ret = fscanf(fp, "%[^,], %d, %d, %d \n", name, &age, &sal, &years);
-		if (!ret || ret == EOF) {
-			break;
-		}
 	}
+
 	fclose(fp);	
 	return head;
 }
