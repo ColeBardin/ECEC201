@@ -115,11 +115,15 @@ struct person *find_person(struct list *head, const char *name)
 	struct person *item;
 	
 	/* Rewrite this function! */
+	/* Create a for loop to iterate through a linked list */
 	list_for (head, cur) {
+		/* Use to_person macro to get the struct person instance for the current element */
 		item = to_person(cur);
+		/* If the parameter name matches the current element name, return address of struct person instance */
 		if(!strcmp(item->name, name))
 			return item;
 	}
+	/* If for loop can execute with no matches, return NULL */
 	return NULL;
 }
 
