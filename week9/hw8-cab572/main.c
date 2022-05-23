@@ -31,41 +31,51 @@ struct list *load_database(const char *filename)
 	/* Rewrite this function! */
 	char name[128];
 	int ret, age, sal, years;
-	
+
+	/* Attempt to open the file */	
 	fp = fopen(filename, "r");
 	if(!fp) {
+		/* If fopen returns NULL ptr, error */
 		fprintf(stderr, "Error: load_database() could not open file %s\n", filename);
 		return NULL;
 	}
-
+	/* Allocate memory for head of the list */
 	head = malloc(sizeof(*head));
 	if(!head) {
+		/* If allocation failed, error and close file */
 		fprintf(stderr, "Error: load_database() could not allocate memory for list head\n");
 		fclose(fp);
 		return NULL;
 	}
+	/* Initialize the list with given head address */
 	list_init(head);
 
 	while ( 1 ) {
+		/* Read one line from the file */
 		ret = fscanf(fp, "%[^,], %d, %d, %d\n", name, &age, &sal, &years);
+		/* Break if no items are scanned or EOF is hit */
 		if (!ret || ret == EOF) {
 			break;
 		}
-
+		/* Allocate memory for the data retrieved in the line */
 		item = malloc(sizeof(*item));
 		if(!item) {
+			/* If allocation fails, close the file and error */
 			fprintf(stderr, "Error: load_database() failed to allocate memory for entry item\n");
 			fclose(fp);
 			return NULL;
 		}
+		/* Copy data from CSV file into doubly linked list */
 		strcpy(item->name, name);
 		item->age = age;
 		item->salary = sal;
 		item->years = years;
+		/* Add this list item's node to the list */
 		list_add_after(head, &item->node);	
 	}
-
+	/* After EOF is hit, close file */
 	fclose(fp);	
+	/* Return head of list */
 	return head;
 }
 
@@ -79,10 +89,17 @@ void unload_database(struct list *head)
 	struct person *item;
 	
 	/* Your code goes here! */
-	list_safe_for (head, cur, sav) {
-		item = to_person(cur);
-		list_remove(&item->node);
-		free(item);
+	/* If the head is not NULL */
+	if (head) {
+		/* Macro a safe for loop */
+		list_safe_for (head, cur, sav) {
+			/* Use to_person macro to get the struct person * for the current element */
+			item = to_person(cur);
+			/* Use list.h func to remove the item's node from the linked list */
+			list_remove(&item->node);
+			/* Free the memory at that location */
+			free(item);
+		}
 	}
 	return;
 }
