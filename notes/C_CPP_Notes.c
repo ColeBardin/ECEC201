@@ -796,6 +796,49 @@ int main() {
 
 
 
+USING LIST_API
+#include "list.h"
+there's no specified value for each list element. therefore in each program it should be specified:
+
+main.c:
+#include <stdlib.h>
+#include <stdio.h>
+#include "list.h"
+
+struct ints {
+	int val; /* Add custom datatype value variable */
+	struct list node; /* Embed of type struct list from list.h */
+};
+int main(int argc, char **argv) {
+	int i;
+	struct ints *item;
+	struct list *head, *cur;
+
+	head = malloc(sizeof(*head));
+	list_init(head);
+
+	for (i=0; i<argc; i++) {
+		item = malloc(sizeof(*item));
+		item->val = atoi(argv[i]);
+		list_add_before(head, &item->node); /* Use address of embedded NODE (of type struct list) of this item */
+	}
+	list_for (head, cur) {
+		/* now here comes the cool stuff */
+		item = container_of(cur, struct ints, node); /* SEE CONTAINER_OF NOTES */
+		printf("%d\n", item->val);
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
