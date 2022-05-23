@@ -327,6 +327,7 @@ void expand(const char *filename)
 	/* Your code goes here! */
 	FILE *rle_fp, *out_fp;
 	unsigned char *count, *c;
+	char *fn;
 	int i, ret;
 	
 	/* Malloc blocks on HEAP for fread() */
@@ -339,7 +340,7 @@ void expand(const char *filename)
 		return;
 	}
 	/* Create filename without extension */	
-	char *fn = filename_rm_ext(filename);
+	fn = filename_rm_ext(filename);
 	/* Try to open rle file */
 	rle_fp = fopen(filename, "rb");
 	/* Handle rle file not opening properly */
