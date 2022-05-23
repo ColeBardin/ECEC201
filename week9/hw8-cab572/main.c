@@ -4,14 +4,14 @@
 #include "list.h"
 
 #define to_person(ptr) \
-  container_of(ptr, struct person, node)
+	container_of(ptr, struct person, node)
 
 struct person {
-  char name[128];
-  int age;
-  int salary;
-  int years;
-  struct list node;
+	char name[128];
+	int age;
+	int salary;
+	int years;
+	struct list node;
 };
 
 
@@ -20,17 +20,90 @@ struct person {
  * 2. Return The NULL Pointer if filename could not be opened
  * 3. Allocate a new list head on the heap
  * 4. Populate the list with data from the file
- * 5. Return the head of the populated list  */
+ * 5. Return the head of the populated list	*/
 struct list *load_database(const char *filename)
 {
-  FILE *fp; 
-  
-  struct list *head;
-  struct person *item;
-  
-  /* Rewrite this function! */
-  
-  return NULL;
+	FILE *fp; 
+	
+	struct list *head;
+	struct person *item;
+	
+	/* Rewrite this function! */
+	char name[128], age[10], sal[15], years[5];
+	int ret;
+	
+	fp = fopen(filename, "r");
+	if(!fp) {
+		fprintf(stderr, "Error: load_database() could not open file %s\n", filename);
+		return NULL;
+	}
+
+	head = malloc(sizeof(*head));
+	if(!head) {
+		fprintf(stderr, "Error: load_database() could not allocate memory for list head\n");
+		fclose(fp);
+		return NULL;
+	}
+	list_init(head);
+
+	ret = fscanf(fp, " %s,", name);
+	if (!ret) {
+		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
+		fclose(fp);
+		return NULL;
+	}
+	ret = fscanf(fp, " %s,", age);
+	if (!ret) {
+		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
+		fclose(fp);
+		return NULL;
+	}
+	ret = fscanf(fp, " %s,", sal);
+	if (!ret) {
+		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
+		fclose(fp);
+		return NULL;
+	}
+	ret = fscanf(fp, " %s\n", years);
+	if (!ret) {
+		fprintf(stderr, "Error: load_database() failed to read first entry from file %s\n", filename);
+		fclose(fp);
+		return NULL;
+	}
+	while (ret && ret!=EOF) {
+
+		item = malloc(sizeof(*item));
+		if(!item) {
+			fprintf(stderr, "Error: load_database() failed to allocate memory for entry item\n");
+			fclose(fp);
+			return NULL;
+		}
+		name[strlen(name)-1] = '\0';
+		strcpy(item->name, name);
+		item->age = atoi(age);
+		item->salary = atoi(sal);
+		item->years = atoi(years);
+		list_add_after(head, &item->node);	
+
+		ret = fscanf(fp, " %s,", name);
+		if (!ret || ret == EOF) {
+			break;
+		}
+		ret = fscanf(fp, " %s,", age);
+		if (!ret || ret == EOF) {
+			break;
+		}
+		ret = fscanf(fp, " %s,", sal);
+		if (!ret || ret == EOF) {
+			break;
+		}
+		ret = fscanf(fp, " %s\n", years);
+		if (!ret || ret == EOF) {
+			break;
+		}
+	}
+	fclose(fp);	
+	return head;
 }
 
 
@@ -39,10 +112,16 @@ struct list *load_database(const char *filename)
  * 2. Free each removed item from the heap */
 void unload_database(struct list *head)
 {
-  struct list *cur, *sav;
-  struct person *item;
-  
-  /* Your code goes here! */
+	struct list *cur, *sav;
+	struct person *item;
+	
+	/* Your code goes here! */
+	list_safe_for (head, cur, sav) {
+		item = to_person(cur);
+		list_remove(&item->node);
+		free(item);
+	}
+	return;
 }
 
 
@@ -52,50 +131,54 @@ void unload_database(struct list *head)
  * 3. Return The NULL Pointer if not found */
 struct person *find_person(struct list *head, const char *name)
 {
-  struct list *cur; 
-  struct person *item;
-  
-  /* Rewrite this function! */
-
-  return NULL;
+	struct list *cur; 
+	struct person *item;
+	
+	/* Rewrite this function! */
+	list_for (head, cur) {
+		item = to_person(cur);
+		if(!strcmp(item->name, name))
+			return item;
+	}
+	return NULL;
 }
 
 
 /* This function prints the provided struct person to the screen */
 void print_person(struct person *p)
 {
-  printf("Employee %s:\n", p->name);
-  printf("   Age: %d\n", p->age);
-  printf("Salary: $%0.2f\n", (float)p->salary / 100.0f);
-  printf(" Years: %d\n", p->years);
+	printf("Employee %s:\n", p->name);
+	printf("   Age: %d\n", p->age);
+	printf("Salary: $%0.2f\n", (float)p->salary / 100.0f);
+	printf(" Years: %d\n", p->years);
 }
 
 
 int main(int argc, char **argv)
 {
-  struct list *head;
-  struct person *item;
-  
-  if (argc != 2) {
-      fprintf(stderr, "Usage: %s employee_name\n", argv[0]);
-      return EXIT_FAILURE;
-  }
+	struct list *head;
+	struct person *item;
+	
+	if (argc != 2) {
+	    fprintf(stderr, "Usage: %s employee_name\n", argv[0]);
+	    return EXIT_FAILURE;
+	}
 
-  head = load_database("employees.csv");
-  
-  if (!head) {
-      fprintf(stderr, "Failed to open database.\n");
-      return EXIT_FAILURE;
-  }
+	head = load_database("employees.csv");
+	
+	if (!head) {
+	    fprintf(stderr, "Failed to open database.\n");
+	    return EXIT_FAILURE;
+	}
 
-  item = find_person(head, argv[1]);
-  if (item)
-      print_person(item);
-  else
-      printf("Employee NOT FOUND!\n");
-  
-  unload_database(head);
-  free(head);
+	item = find_person(head, argv[1]);
+	if (item)
+	    print_person(item);
+	else
+	    printf("Employee NOT FOUND!\n");
+	
+	unload_database(head);
+	free(head);
 
-  return 0;
+	return 0;
 }
