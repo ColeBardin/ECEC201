@@ -1,3 +1,8 @@
+#include <stddef.h>
+
+#define container_of(_mptr, type, member)	\
+(type *)( (char *)_mptr - offsetof(type, member) )
+
 #define list_for(head, cur)		\
 for (cur=head->next; cur!=head; cur=cur->next)
 
