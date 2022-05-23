@@ -34,14 +34,14 @@ struct list *load_database(const char *filename)
 
 	/* Attempt to open the file */	
 	fp = fopen(filename, "r");
-	if(!fp) {
+	if (!fp) {
 		/* If fopen returns NULL ptr, error */
 		fprintf(stderr, "Error: load_database() could not open file %s\n", filename);
 		return NULL;
 	}
 	/* Allocate memory for head of the list */
 	head = malloc(sizeof(*head));
-	if(!head) {
+	if (!head) {
 		/* If allocation failed, error and close file */
 		fprintf(stderr, "Error: load_database() could not allocate memory for list head\n");
 		fclose(fp);
@@ -59,7 +59,7 @@ struct list *load_database(const char *filename)
 		}
 		/* Allocate memory for the data retrieved in the line */
 		item = malloc(sizeof(*item));
-		if(!item) {
+		if (!item) {
 			/* If allocation fails, close the file and error */
 			fprintf(stderr, "Error: load_database() failed to allocate memory for entry item\n");
 			fclose(fp);
