@@ -215,6 +215,8 @@ void compress(const char *filename)
 	/* Make sure filepointer is not NULL */
 	if (!rle_fp) {
 		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
+		/* Close input file pointer */
+		free(input_fp);
 		return;	
 	}
 
@@ -223,6 +225,9 @@ void compress(const char *filename)
 	/* Handle if fwrite fails to write 4 bytes */
 	if (ret!=4) {
 		fprintf(stderr, "Error: compress() could not write magic bytes to %s\n", rle_fn);
+		/* Close both files before returning */
+		free(input_fp);
+		free(rle_fp);
 		return;
 	}
 
@@ -231,6 +236,9 @@ void compress(const char *filename)
 	/* Handle if malloc fails, exit function */
 	if (!c) {
 		fprintf(stderr, "Error: compress() could not allocate memory for c variable\n");
+		/* Close both files before returning */
+		free(input_fp);
+		free(rle_fp);
 		return;
 	}
 	/* Malloc a block on HEAP for next char variable */
@@ -238,6 +246,9 @@ void compress(const char *filename)
 	/* Handle if malloc fails, exit function */
 	if (!c_next) {
 		fprintf(stderr, "Error: compress() could not allocate memory for c_next variable\n");
+		/* Close both files before returning */
+		free(input_fp);
+		free(rle_fp);
 		return;
 	}
 
@@ -246,6 +257,9 @@ void compress(const char *filename)
 	/* Error handle fread() */
 	if (!ret) {
 		fprintf(stderr, "Error: compress() failed to read first character from %s\n", filename);
+		/* Close both files before returning */
+		free(input_fp);
+		free(rle_fp);
 		return;
 	}
 	/* Repeat until hitting input file EOF */
