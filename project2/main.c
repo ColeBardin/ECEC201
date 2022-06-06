@@ -119,7 +119,7 @@ char *filename_rm_ext(const char *filename)
 	/* Count backwards from end of filename until hitting a period. Useful if different length extension is used for compressed files */
 	for (index=len; filename[index] != '.'; index--); /* Makes index var the index of last period in filename. No need to error handle since expand() checks for extension before attempting to remove it */
 	/* Malloc space up to last period of filename. More  modular than just strlen(filename)-4 */
-	dst = malloc(index);
+	dst = malloc(index + 1);
 	/* Check for error in malloc call */
 	if (!dst) {
 		fprintf(stderr, "Error: filename_rm_ext failed to malloc\n");
@@ -127,6 +127,8 @@ char *filename_rm_ext(const char *filename)
 	}
 	/* Copy the characters from the filename excluding the extension (index # of chars) */
 	strncpy(dst, filename, index);
+	/* Null terminate new string */
+	dst[index] = '\0';
 	/* Return memory address of filename without ext on HEAP */
 	return dst;
 }
