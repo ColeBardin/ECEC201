@@ -208,6 +208,8 @@ void compress(const char *filename)
 	/* Make sure filepointer is not NULL */
 	if (!input_fp) {
 		fprintf(stderr, "Error: compress() count not open %s in \"rb\" mode\n", filename);
+		/* Free rle filename */
+		free(rle_fn);
 		return;
 	}
 	/* Open the output file with filepointer rle_fp */
@@ -215,8 +217,10 @@ void compress(const char *filename)
 	/* Make sure filepointer is not NULL */
 	if (!rle_fp) {
 		fprintf(stderr, "Error: compress() could not create %s in \"wb\" mode\n", rle_fn);
+		/* Free rle filename */
+		free(rle_fn);
 		/* Close input file pointer */
-		free(input_fp);
+		fclose(input_fp);
 		return;	
 	}
 
@@ -225,9 +229,11 @@ void compress(const char *filename)
 	/* Handle if fwrite fails to write 4 bytes */
 	if (ret!=4) {
 		fprintf(stderr, "Error: compress() could not write magic bytes to %s\n", rle_fn);
+		/* Free rle filename */
+		free(rle_fn);
 		/* Close both files before returning */
-		free(input_fp);
-		free(rle_fp);
+		fclose(input_fp);
+		fclose(rle_fp);
 		return;
 	}
 
@@ -236,9 +242,11 @@ void compress(const char *filename)
 	/* Handle if malloc fails, exit function */
 	if (!c) {
 		fprintf(stderr, "Error: compress() could not allocate memory for c variable\n");
+		/* Free rle filename */
+		free(rle_fn);
 		/* Close both files before returning */
-		free(input_fp);
-		free(rle_fp);
+		fclose(input_fp);
+		fclose(rle_fp);
 		return;
 	}
 	/* Malloc a block on HEAP for next char variable */
@@ -246,9 +254,13 @@ void compress(const char *filename)
 	/* Handle if malloc fails, exit function */
 	if (!c_next) {
 		fprintf(stderr, "Error: compress() could not allocate memory for c_next variable\n");
+		/* Free rle filename */
+		free(rle_fn);
+		/* Free memory allocated for c var */
+		free(c);
 		/* Close both files before returning */
-		free(input_fp);
-		free(rle_fp);
+		fclose(input_fp);
+		fclose(rle_fp);
 		return;
 	}
 
@@ -257,9 +269,15 @@ void compress(const char *filename)
 	/* Error handle fread() */
 	if (!ret) {
 		fprintf(stderr, "Error: compress() failed to read first character from %s\n", filename);
+		/* Free rle filename */
+		free(rle_fn);
+		/* Free memory malloced for c var */
+		free(c);
+		/* Free memory allocated for c_next var */
+		free(c_next);
 		/* Close both files before returning */
-		free(input_fp);
-		free(rle_fp);
+		fclose(input_fp);
+		fclose(rle_fp);
 		return;
 	}
 	/* Repeat until hitting input file EOF */
@@ -337,6 +355,9 @@ void expand(const char *filename)
 	/* Check if the provided filename the correct extension */
 	if (!check_ext(filename)) {
 		fprintf(stderr, "Error: expand() recieved a file not of .rle type: %s\n", filename);
+		/* Free count and c vars */
+		free(c);
+		free(count);
 		return;
 	}
 	/* Create filename without extension */	
@@ -346,6 +367,11 @@ void expand(const char *filename)
 	/* Handle rle file not opening properly */
 	if (!rle_fp) {
 		fprintf(stderr, "Error: expand() could not open .rle file: %s\n", filename);
+		/* Free filename memory allocated by filename_rm_ext () */
+		free(fn);
+		/* Free count and c vars */
+		free(c);
+		free(count);
 		return;
 	}
 	/* Try to create output file */
@@ -355,6 +381,11 @@ void expand(const char *filename)
 		fprintf(stderr, "Error: expand() could not create output file: %s\n", fn);
 		/* Close rle file */
 		fclose(rle_fp);
+		/* Free filename memory allocated by filename_rm_ext () */
+		free(fn);
+		/* Free count and c vars */
+		free(c);
+		free(count);
 		return;
 	}
 	/* Check to make sure file has proper magic bytes */
@@ -363,6 +394,11 @@ void expand(const char *filename)
 		/* Close files before returning */
 		fclose(rle_fp);
 		fclose(out_fp);
+		/* Free filename memory allocated by filename_rm_ext () */
+		free(fn);
+		/* Free count and c vars */
+		free(c);
+		free(count);
 		return;
 	}
 
@@ -388,6 +424,11 @@ void expand(const char *filename)
 				/* Close files before returning */
 				fclose(rle_fp);
 				fclose(out_fp);
+				/* Free filename memory allocated by filename_rm_ext () */
+				free(fn);
+				/* Free count and c vars */
+				free(c);
+				free(count);
 				return;
 			}
 		}
