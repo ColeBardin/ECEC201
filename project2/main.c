@@ -158,7 +158,7 @@ int check_ext(const char *filename)
 int check_magic(FILE *fp)
 {
 	/* Your code goes here! */
-	char dst[] = "0000"; /* Create dst string with 4 chars and a NULL char */
+	char dst[] = "0000"; /* Create string of 4 zeroes with null terminator */ 
 	char rle[] = "!RLE";
 	int ret;
 	/* Attempt to read 4 bytes from filepointer */
@@ -202,14 +202,17 @@ void compress(const char *filename)
 	unsigned char *c, *c_next;
 	unsigned char count = 1;
 	unsigned char magic[] = "!RLE";
+	char *rle_fn;
 	int ret, ret2;
-	char *rle_fn = filename_add_ext(filename, ".rle");
 
+	/* Remove the extension from the current filename */
+	rle_fn = filename_add_ext(filename, ".rle");
 	/* Error handle rle_fn creation */
 	if (!rle_fn) {
 		/* Error message provided in filename_add_ext() */
 		return;
 	}
+
 	/* Open the input file with filepointer input_fp */
 	input_fp = fopen(filename, "rb");
 	/* Make sure filepointer is not NULL */
