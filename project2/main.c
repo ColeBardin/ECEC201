@@ -199,10 +199,15 @@ void compress(const char *filename)
 	FILE *rle_fp, *input_fp;
 	unsigned char *c, *c_next;
 	unsigned char count = 1;
-	char *rle_fn = filename_add_ext(filename, ".rle");
 	unsigned char magic[] = "!RLE";
 	int ret, ret2;
+	char *rle_fn = filename_add_ext(filename, ".rle");
 
+	/* Error handle rle_fn creation */
+	if (!rle_fn) {
+		/* Error message provided in filename_add_ext() */
+		return;
+	}
 	/* Open the input file with filepointer input_fp */
 	input_fp = fopen(filename, "rb");
 	/* Make sure filepointer is not NULL */
@@ -350,8 +355,19 @@ void expand(const char *filename)
 	
 	/* Malloc blocks on HEAP for fread() */
 	c = malloc(sizeof(*c));
+	/* Error handle malloc call */
+	if (!c) {
+		fprintf(stderr, "ERROR: expand() could not allocate memory for char variable\n");
+		return;
+	}
+	/* Error handle malloc call */
 	count = malloc(sizeof(*count));
-
+	if (!count) {
+		fprintf(stderr, "ERROR: expand could not allocate memory for count variable\n");
+		/* Free c variable malloced above */
+		free(c);
+		return;
+	}
 	/* Check if the provided filename the correct extension */
 	if (!check_ext(filename)) {
 		fprintf(stderr, "Error: expand() recieved a file not of .rle type: %s\n", filename);
@@ -362,6 +378,14 @@ void expand(const char *filename)
 	}
 	/* Create filename without extension */	
 	fn = filename_rm_ext(filename);
+	/* Error handle filename creation */
+	if (!fn) {
+		/* Free count and c vars */
+		free(c);
+		free(count);
+		/* Error message provided in filename_rm_ext() */
+		return;
+	}
 	/* Try to open rle file */
 	rle_fp = fopen(filename, "rb");
 	/* Handle rle file not opening properly */
