@@ -19,3 +19,5 @@ For this course, Project 1 was to complete a light toggling game. Objective is t
 Project 2 was to write a file compression and decompression software using run length encoding. This program can also generate a testfile and perform a hex dump of a given file
 
 Usage: `./rle -d|-g|-c|-x <filename.ext>`
+
+I got 10% off because I switched 2 lines of code. When rle file is invalid, it accidentally creates empty file
